@@ -83,6 +83,7 @@ mindfulness, water, reminder, vitals, healthkit, monitoring
 ## 6. Privacy Policy URL
 
 **Privacy Policy:** https://techidaily.com/vitamind-privacy
+**Local Privacy Policy HTML:** AppStore/Docs/PrivacyPolicy.html
 
 ---
 
