@@ -53,6 +53,17 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "32445C35443AD29BB939734A"
+               BuildableName = "VitaMindTests.xctest"
+               BlueprintName = "VitaMindTests"
+               ReferencedContainer = "container:VitaMind.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		40302D22A7A518C8693CB7E4 /* VitaMindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8953DFB59D7FCB23D281364 /* VitaMindApp.swift */; };
 		5F660D21EA1EFA6C0A96F76A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1F1493105EB65845A1E5C60 /* Assets.xcassets */; };
+		794B7C6D7B498761B8AA383D /* VitaMindUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAB14BA0911D8A73D0FDED3 /* VitaMindUnitTests.swift */; };
 		81155794BFDC433F26EC9461 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE38FD696BB8D368AE84605A /* ContentView.swift */; };
 		91F5EDD41868D7B0875DC8F6 /* VitaMindWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD17787F6B6965D4B1957F63 /* VitaMindWidget.swift */; };
 		9935D61D00D57F238025C0C0 /* VitaMindWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2EAE5C0FBBD79644F15B301B /* VitaMindWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -23,6 +24,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 32E4496E5466939E3813DA47;
 			remoteInfo = VitaMindWidget;
+		};
+		4C5F7946E7A91E4D95CBD0A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A8A4ED68A0AE0890B2E176F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A28B1FE4162CC44B1701BC6D;
+			remoteInfo = VitaMind;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -41,6 +49,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0EC969275DDBD73E89660F54 /* VitaMindTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitaMindTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E6F12C59BA52485127707F4 /* VitaMind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaMind.entitlements; sourceTree = "<group>"; };
 		20F1E2DC2995BA8409DABDE8 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2EAE5C0FBBD79644F15B301B /* VitaMindWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = VitaMindWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +61,7 @@
 		CE38FD696BB8D368AE84605A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D470BF67C450EBF5E8C97FCC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EE3A32EE9388BB6C75E885B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		EEAB14BA0911D8A73D0FDED3 /* VitaMindUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindUnitTests.swift; sourceTree = "<group>"; };
 		F9B566566CFF1E82C30AA2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				C0528451B04F7CF3573B7946 /* VitaMind.app */,
+				0EC969275DDBD73E89660F54 /* VitaMindTests.xctest */,
 				2EAE5C0FBBD79644F15B301B /* VitaMindWidget.appex */,
 			);
 			name = Products;
@@ -77,9 +88,18 @@
 			isa = PBXGroup;
 			children = (
 				C614369A3BCB16E77C3C27A7 /* Sources */,
+				91BD5149998EAE93BA606E7F /* Tests */,
 				BB6964C64FAEDD3930BD5AA6 /* Widget */,
 				41142BEDE69065B91B3DCA81 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		91BD5149998EAE93BA606E7F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EEAB14BA0911D8A73D0FDED3 /* VitaMindUnitTests.swift */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		BB6964C64FAEDD3930BD5AA6 /* Widget */ = {
@@ -109,6 +129,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		32445C35443AD29BB939734A /* VitaMindTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5C7D687556DBFC8F40F56B13 /* Build configuration list for PBXNativeTarget "VitaMindTests" */;
+			buildPhases = (
+				182F94472BE73EE3D7645546 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0B3904220595970B147BCFC5 /* PBXTargetDependency */,
+			);
+			name = VitaMindTests;
+			packageProductDependencies = (
+			);
+			productName = VitaMindTests;
+			productReference = 0EC969275DDBD73E89660F54 /* VitaMindTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		32E4496E5466939E3813DA47 /* VitaMindWidget */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 983B42C620230ADE849ECED3 /* Build configuration list for PBXNativeTarget "VitaMindWidget" */;
@@ -156,6 +194,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1650;
 				TargetAttributes = {
+					32445C35443AD29BB939734A = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
 					32E4496E5466939E3813DA47 = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
@@ -181,6 +223,7 @@
 			projectRoot = "";
 			targets = (
 				A28B1FE4162CC44B1701BC6D /* VitaMind */,
+				32445C35443AD29BB939734A /* VitaMindTests */,
 				32E4496E5466939E3813DA47 /* VitaMindWidget */,
 			);
 		};
@@ -207,6 +250,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		182F94472BE73EE3D7645546 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				794B7C6D7B498761B8AA383D /* VitaMindUnitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A39395CA7AB440E8FA083507 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -227,6 +278,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0B3904220595970B147BCFC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A28B1FE4162CC44B1701BC6D /* VitaMind */;
+			targetProxy = 4C5F7946E7A91E4D95CBD0A1 /* PBXContainerItemProxy */;
+		};
 		44327C5ADEA0BC706C6185EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 32E4496E5466939E3813DA47 /* VitaMindWidget */;
@@ -397,6 +453,23 @@
 			};
 			name = Release;
 		};
+		93B6005A31217523EFC25500 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(inherited)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vitamind.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(inherited)";
+			};
+			name = Debug;
+		};
 		B6E49E96A3442C284F237B2F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -428,9 +501,35 @@
 			};
 			name = Debug;
 		};
+		E13022A20BCF5337350FBB0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(inherited)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vitamind.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(inherited)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5C7D687556DBFC8F40F56B13 /* Build configuration list for PBXNativeTarget "VitaMindTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93B6005A31217523EFC25500 /* Debug */,
+				E13022A20BCF5337350FBB0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		6039EC2B5E9BD9362CC4E291 /* Build configuration list for PBXNativeTarget "VitaMind" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

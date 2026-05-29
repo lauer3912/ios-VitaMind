@@ -35,6 +35,7 @@ targets:
       properties:
         com.apple.developer.healthkit: true
         com.apple.developer.healthkit.access: []
+        com.apple.developer.healthkit.background-delivery: true
         com.apple.security.application-groups:
           - group.com.vitamind.app
     settings:
@@ -74,6 +75,21 @@ targets:
         SKIP_INSTALL: YES
         GENERATE_INFOPLIST_FILE: NO
 
+  VitaMindTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+        type: group
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vitamind.app.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(inherited)"
+        BUNDLE_LOADER: "$(inherited)"
+    dependencies:
+      - target: VitaMind
+
 schemes:
   VitaMind:
     build:
@@ -84,6 +100,8 @@ schemes:
       config: Debug
     test:
       config: Debug
+      targets:
+        - VitaMindTests
     profile:
       config: Release
     analyze:
