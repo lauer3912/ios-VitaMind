@@ -64,17 +64,6 @@
                ReferencedContainer = "container:VitaMind.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F9D83A1ED3F6CB6F64F1A4DB"
-               BuildableName = "VitaMindUITests.xctest"
-               BlueprintName = "VitaMindUITests"
-               ReferencedContainer = "container:VitaMind.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>
