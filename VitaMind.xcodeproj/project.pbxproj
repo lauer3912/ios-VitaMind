@@ -65,7 +65,7 @@
 		492354AE38CB673E9D2BEA64 /* VitaMindWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaMindWidget.entitlements; sourceTree = "<group>"; };
 		B8953DFB59D7FCB23D281364 /* VitaMindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindApp.swift; sourceTree = "<group>"; };
 		BD17787F6B6965D4B1957F63 /* VitaMindWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindWidget.swift; sourceTree = "<group>"; };
-		C0528451B04F7CF3573B7946 /* VitaMind.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VitaMind.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0528451B04F7CF3573B7946 /* VitaMindGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VitaMindGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1F1493105EB65845A1E5C60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE38FD696BB8D368AE84605A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D470BF67C450EBF5E8C97FCC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -79,7 +79,7 @@
 		41142BEDE69065B91B3DCA81 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C0528451B04F7CF3573B7946 /* VitaMind.app */,
+				C0528451B04F7CF3573B7946 /* VitaMindGo.app */,
 				0EC969275DDBD73E89660F54 /* VitaMindTests.xctest */,
 				280BA09B031FD9476678CF44 /* VitaMindUITests.xctest */,
 				2EAE5C0FBBD79644F15B301B /* VitaMindWidget.appex */,
@@ -202,7 +202,7 @@
 			packageProductDependencies = (
 			);
 			productName = VitaMind;
-			productReference = C0528451B04F7CF3573B7946 /* VitaMind.app */;
+			productReference = C0528451B04F7CF3573B7946 /* VitaMindGo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F9D83A1ED3F6CB6F64F1A4DB /* VitaMindUITests */ = {
@@ -356,7 +356,11 @@
 				DEVELOPMENT_TEAM = 9L6N2ZF26B;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Widget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind.widget;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -373,8 +377,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Sources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind;
+				PRODUCT_NAME = VitaMindGo;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -558,7 +566,11 @@
 				DEVELOPMENT_TEAM = 9L6N2ZF26B;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Widget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind.widget;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -595,8 +607,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Sources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind;
+				PRODUCT_NAME = VitaMindGo;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
