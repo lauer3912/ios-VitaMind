@@ -79,9 +79,17 @@ jobs:
           if [ -f ".github/profiles/VitaMind_App_Store.mobileprovision" ]; then
             cp ".github/profiles/VitaMind_App_Store.mobileprovision" \
                "$HOME/Library/MobileDevice/Provisioning Profiles/"
-            echo "✓ Provisioning profile copied"
+            echo "✓ VitaMind_App_Store.mobileprovision copied"
           else
-            echo "⚠ No provisioning profile found, will use automatic signing"
+            echo "⚠ VitaMind_App_Store.mobileprovision not found"
+          fi
+          
+          if [ -f ".github/profiles/VitaMindWidget_App_Store.mobileprovision" ]; then
+            cp ".github/profiles/VitaMindWidget_App_Store.mobileprovision" \
+               "$HOME/Library/MobileDevice/Provisioning Profiles/"
+            echo "✓ VitaMindWidget_App_Store.mobileprovision copied"
+          else
+            echo "⚠ VitaMindWidget_App_Store.mobileprovision not found"
           fi
 
           echo "=== Current Provisioning Profiles ==="
@@ -148,23 +156,13 @@ jobs:
           echo "=== Build Archive ==="
           mkdir -p build
 
-          # Find signing identity from custom keychain
-          CODESIGN_KEYCHAIN="/Users/runner/build/codesign.keychain"
-          security list-keychains -d user -s "$CODESIGN_KEYCHAIN" ~/Library/Keychains/login.keychain-db
-          security default-keychain -s "$CODESIGN_KEYCHAIN"
-          security unlock-keychain -p "" "$CODESIGN_KEYCHAIN"
-          
-          CODE_SIGN_ID=$(security find-identity -v -p codesigning "$CODESIGN_KEYCHAIN" | grep "Apple Distribution" | head -1 | awk '{print $2}')
-          echo "Found signing identity: $CODE_SIGN_ID"
-
           xcodebuild \
             -project VitaMind.xcodeproj \
             -scheme VitaMind \
             -configuration Release \
             -archivePath build/VitaMind.xcarchive \
             CODE_SIGNING_ALLOWED=YES \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="$CODE_SIGN_ID" \
+            CODE_SIGN_STYLE=Automatic \
             DEVELOPMENT_TEAM=9L6N2ZF26B \
             -allowProvisioningUpdates \
             archive 2>&1 | tee build/archive.log
