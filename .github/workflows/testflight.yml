@@ -116,19 +116,21 @@ jobs:
           echo "=== Build Archive ==="
           mkdir -p build
 
-          # Use sdk iphoneos (device build, required for Archive)
-          # CODE_SIGN_IDENTITY="Apple Distribution" lets Xcode find cert via keychain
-          # PROVISIONING_PROFILE_SPECIFIER uses the profile Name field
+          # CODE_SIGN_STYLE=Manual: explicitly specify identity + profile for each target
+          # Main App profile name
+          # Widget profile name
           xcrun xcodebuild \
             -project VitaMind.xcodeproj \
             -scheme VitaMind \
             -configuration Release \
             -sdk iphoneos \
             CODE_SIGN_IDENTITY="Apple Distribution" \
+            CODE_SIGN_STYLE=Manual \
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGNING_ALLOWED=YES \
             DEVELOPMENT_TEAM=9L6N2ZF26B \
             PROVISIONING_PROFILE_SPECIFIER="iOS Team Store Provisioning Profile: com.ggsheng.VitaMind" \
+            OTHER_CODE_SIGN_FLAGS="--rictentative" \
             -archivePath build/VitaMind.xcarchive \
             archive 2>&1 | tee build/archive.log
           
@@ -149,4 +151,4 @@ jobs:
           echo "Archive: build/VitaMind.xcarchive"
           echo "API Key ID: H3973L93M5"
           echo "Team ID: 9L6N2ZF26B"
-          echo "Note: Full TestFlight upload requires altool configuration (see SOP template)"
+          echo "Note: Full TestFlight upload requires altool configuration"
