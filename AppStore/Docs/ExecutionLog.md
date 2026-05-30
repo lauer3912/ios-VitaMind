@@ -105,3 +105,29 @@
 ---
 
 _Last updated: 2026-05-30 08:14 GMT+8_
+---
+
+## 2026-05-30 下午
+
+### 更名 VitaMindGo
+- 修改主 App Display Name: `VitaMind` → `VitaMindGo`
+- 修改 Widget Display Name: `VitaMind Widget` → `VitaMindGo Widget`
+
+### 截图目录整理
+- iPhone 截图: 1206×2622, 4张
+- iPad 截图: 2048×2732 (从2064×2752修正), 4张
+- 组织为 `iPhone_67_1290x2796/` 和 `iPad_13_2048x2732/` 目录结构
+
+### 修复 BGTaskSchedulerPermittedIdentifiers
+- 添加到 Info.plist: `com.ggsheng.VitaMind.refresh`, `com.ggsheng.VitaMind.processing`
+- 上传 App Store 验证通过 ✅
+
+### SOP 文档更新
+- §1.2.2: 新增 Display Name 修改 checklist
+- §4.1: Info.plist 模板添加 BGTaskSchedulerPermittedIdentifiers
+- §8.9: Background Modes 添加 processing 模式警告
+
+### App Store 提交
+- **状态: ✅ 提交成功**
+- 版本: 3.0.0
+- Build ID: (见 Xcode Archive)
