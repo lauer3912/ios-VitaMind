@@ -67,7 +67,6 @@ jobs:
             exit 1
           fi
 
-          # Use GITHUB_OUTPUT to set output for next step
           echo "CERT_B64=$CERT_B64" >> $GITHUB_OUTPUT
           echo "✓ Certificate Base64 computed: ${#CERT_B64} characters"
 
@@ -81,7 +80,7 @@ jobs:
                "$HOME/Library/MobileDevice/Provisioning Profiles/"
             echo "✓ VitaMind_App_Store.mobileprovision copied"
           else
-            echo "⚠ VitaMind_App_Store.mobileprovision not found"
+            echo "ERROR: VitaMind_App_Store.mobileprovision not found"
             exit 1
           fi
           
@@ -90,7 +89,7 @@ jobs:
                "$HOME/Library/MobileDevice/Provisioning Profiles/"
             echo "✓ VitaMindWidget_App_Store.mobileprovision copied"
           else
-            echo "⚠ VitaMindWidget_App_Store.mobileprovision not found"
+            echo "ERROR: VitaMindWidget_App_Store.mobileprovision not found"
             exit 1
           fi
 
@@ -109,23 +108,15 @@ jobs:
         run: |
           echo "=== Setup Keychain for Build ==="
           
-          # The import-codesign-certs action creates signing_temp.keychain-db
-          # Add it to the keychain search list
           security list-keychains -d user -s signing_temp.keychain-db login.keychain-db
           security default-keychain -s signing_temp.keychain-db
           security unlock-keychain -p "" signing_temp.keychain-db
           
-          echo "=== Available Signing Identities (signing_temp) ==="
-          security find-identity -v -p codesigning signing_temp.keychain-db || echo "None found in signing_temp"
-          
-          echo "=== Available Signing Identities (login) ==="
-          security find-identity -v -p codesigning login.keychain-db || echo "None found in login"
+          echo "=== Available Signing Identities ==="
+          security find-identity -v -p codesigning signing_temp.keychain-db
           
           echo "=== Default Keychain ==="
           security default-keychain
-          
-          echo "=== Keychain Search List ==="
-          security list-keychains -d user
 
       - name: Copy API Key
         run: |
@@ -147,23 +138,30 @@ jobs:
           fi
 
           echo "✓ API key copied successfully"
-          ls -la "$HOME/.appstoreconnect/private_keys/"
 
       - name: Build Archive
         run: |
           echo "=== Build Archive ==="
           mkdir -p build
 
-          # Get signing identity from the temp keychain
+          # Get signing identity from keychain
           CODE_SIGN_ID=$(security find-identity -v -p codesigning signing_temp.keychain-db 2>/dev/null | grep "iPhone Distribution" | head -1 | awk '{print $2}')
-          echo "Signing identity found: $CODE_SIGN_ID"
+          echo "Signing identity: $CODE_SIGN_ID"
           
           if [ -z "$CODE_SIGN_ID" ]; then
-            echo "ERROR: No iPhone Distribution certificate found in signing_temp keychain"
-            echo "Available identities:"
+            echo "ERROR: No iPhone Distribution certificate found"
             security find-identity -v -p codesigning signing_temp.keychain-db
             exit 1
           fi
+
+          # Profile names must match the Name field in mobileprovision
+          # VitaMind: "iOS Team Store Provisioning Profile: com.ggsheng.VitaMind"
+          # VitaMindWidget: "iOS Team Store Provisioning Profile: com.ggsheng.VitaMind.widget"
+          PROFILE_VITAMIND="iOS Team Store Provisioning Profile: com.ggsheng.VitaMind"
+          PROFILE_WIDGET="iOS Team Store Provisioning Profile: com.ggsheng.VitaMind.widget"
+          
+          echo "Main App Profile: $PROFILE_VITAMIND"
+          echo "Widget Profile: $PROFILE_WIDGET"
 
           xcodebuild \
             -project VitaMind.xcodeproj \
@@ -174,6 +172,8 @@ jobs:
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="$CODE_SIGN_ID" \
             DEVELOPMENT_TEAM=9L6N2ZF26B \
+            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_VITAMIND" \
+            OTHER_CODE_SIGN_FLAGS="--rictenforce" \
             -allowProvisioningUpdates \
             archive 2>&1 | tee build/archive.log
 
@@ -193,7 +193,6 @@ jobs:
           fi
 
           echo "✓ Archive completed successfully"
-          echo "=== Build output ==="
           ls -la build/
 
       - name: Upload to TestFlight
