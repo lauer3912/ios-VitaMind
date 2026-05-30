@@ -53,54 +53,6 @@ jobs:
           echo "CERT_B64=$CERT_B64" >> $GITHUB_OUTPUT
           echo "✓ Certificate Base64 computed"
 
-      - name: Add Apple ID to Keychain
-        run: |
-          echo "=== Add Apple ID to Keychain ==="
-          # Unlock login keychain first
-          security unlock-keychain -p "" ~/Library/Keychains/login.keychain-db
-          security set-keychain-settings -lut 21600 ~/Library/Keychains/login.keychain-db
-          
-          # Add Apple ID internet password to keychain
-          # This makes the account available to Xcode for Automatic signing
-          security add-internet-password \
-            -s "apple.com" \
-            -r "dflt" \
-            -a "${{ secrets.APPLE_ID_USERNAME }}" \
-            -w "${{ secrets.APPLE_ID_PASSWORD }}" \
-            -T "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild" \
-            -T "/usr/bin/security" \
-            ~/Library/Keychains/login.keychain-db 2>&1 || echo "Note: security add may fail if already exists"
-          
-          echo "=== Verify Apple ID in keychain ==="
-          security find-internet-password -s "apple.com" -a "${{ secrets.APPLE_ID_USERNAME }}" 2>&1 | head -5 || true
-          echo "✓ Apple ID added to keychain"
-
-      - name: Copy Provisioning Profiles
-        run: |
-          echo "=== Copy Provisioning Profiles ==="
-          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-
-          if [ -f ".github/profiles/VitaMind_App_Store.mobileprovision" ]; then
-            cp ".github/profiles/VitaMind_App_Store.mobileprovision" \
-               "$HOME/Library/MobileDevice/Provisioning Profiles/"
-            echo "✓ VitaMind_App_Store.mobileprovision copied"
-          else
-            echo "ERROR: VitaMind_App_Store.mobileprovision not found"
-            exit 1
-          fi
-          
-          if [ -f ".github/profiles/VitaMindWidget_App_Store.mobileprovision" ]; then
-            cp ".github/profiles/VitaMindWidget_App_Store.mobileprovision" \
-               "$HOME/Library/MobileDevice/Provisioning Profiles/"
-            echo "✓ VitaMindWidget_App_Store.mobileprovision copied"
-          else
-            echo "ERROR: VitaMindWidget_App_Store.mobileprovision not found"
-            exit 1
-          fi
-
-          echo "=== Current Provisioning Profiles ==="
-          ls -la "$HOME/Library/MobileDevice/Provisioning Profiles/"
-
       - name: Import Certificate via Apple Actions
         uses: Apple-Actions/import-codesign-certs@v7
         with:
@@ -118,40 +70,25 @@ jobs:
           echo "=== Available Signing Identities ==="
           security find-identity -v -p codesigning signing_temp.keychain-db
 
-      - name: Copy API Key
+      - name: Setup API Key
         run: |
-          echo "=== Copy API Key ==="
+          echo "=== Setup API Key ==="
           mkdir -p "$HOME/.appstoreconnect/private_keys"
-
-          if [ ! -f ".github/certs/AuthKey_H3973L93M5.p8" ]; then
-            echo "ERROR: API key file not found"
-            exit 1
-          fi
-
-          cp ".github/certs/AuthKey_H3973L93M5.p8" \
-             "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
+          cp .github/certs/AuthKey_H3973L93M5.p8 "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
           chmod 600 "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
-          echo "✓ API key copied"
+          ls -la "$HOME/.appstoreconnect/private_keys/"
 
-      - name: Build Archive
+      - name: Build Archive (Skip Signing)
         run: |
-          echo "=== Build Archive ==="
+          echo "=== Build Archive (CODE_SIGNING_ALLOWED=NO) ==="
           mkdir -p build
 
-          # CODE_SIGN_STYLE=Manual + certificate in keychain
-          # Xcode will automatically find matching profile by DEVELOPMENT_TEAM + Bundle ID
-          # DO NOT use PROVISIONING_PROFILE_SPECIFIER - that causes the IsXcodeManaged conflict
           xcrun xcodebuild \
             -project VitaMind.xcodeproj \
             -scheme VitaMind \
             -configuration Release \
             -sdk iphoneos \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGNING_REQUIRED=YES \
-            CODE_SIGNING_ALLOWED=YES \
-            DEVELOPMENT_TEAM=9L6N2ZF26B \
-            -allowProvisioningUpdates \
+            CODE_SIGNING_ALLOWED=NO \
             archive 2>&1 | tee build/archive.log
           
           echo "Archive exit code: ${PIPESTATUS[0]}"
@@ -162,13 +99,58 @@ jobs:
             exit 1
           fi
 
-          echo "✓ Archive completed successfully"
+          echo "✓ Archive completed"
           ls -la build/VitaMind.xcarchive
+
+      - name: Export IPA with API Key Auth
+        run: |
+          echo "=== Export IPA with API Key Auth ==="
+          mkdir -p build
+
+          # ExportOptions.plist - method=app-store-connect lets xcodebuild auto-fetch profiles via API Key
+          cat > build/ExportOptions.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>signingCertificate</key>
+            <string>Apple Distribution</string>
+            <key>teamId</key>
+            <string>9L6N2ZF26B</string>
+          </dict>
+          </plist>
+          EOF
+
+          xcrun xcodebuild \
+            -exportArchive \
+            -archivePath build/VitaMind.xcarchive \
+            -exportOptionsPlist build/ExportOptions.plist \
+            -exportPath build \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8" \
+            -authenticationKeyID H3973L93M5 \
+            -authenticationKeyIssuerID b2a00f88-3a8d-40d0-b148-1f1db92e10b7 \
+            2>&1 | tee build/export.log
+          
+          echo "Export exit code: ${PIPESTATUS[0]}"
+          ls -la build/*.ipa 2>/dev/null || echo "No IPA found"
 
       - name: Upload to TestFlight
         run: |
           echo "=== Upload to TestFlight ==="
-          echo "Archive: build/VitaMind.xcarchive"
-          echo "API Key ID: H3973L93M5"
-          echo "Team ID: 9L6N2ZF26B"
-          echo "Note: Full TestFlight upload requires altool configuration"
+          IPA=$(ls build/*.ipa 2>/dev/null | head -1)
+          if [ -z "$IPA" ]; then
+            echo "ERROR: No IPA found"
+            exit 1
+          fi
+          echo "Uploading IPA: $IPA"
+          xcrun altool \
+            --upload-app \
+            -f "$IPA" \
+            -t ios \
+            --apiKey "H3973L93M5" \
+            --apiIssuer "b2a00f88-3a8d-40d0-b148-1f1db92e10b7" \
+            2>&1 | tee build/upload.log
+          echo "Upload exit code: ${PIPESTATUS[0]}"
