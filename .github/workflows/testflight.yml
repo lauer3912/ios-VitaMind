@@ -23,52 +23,35 @@ jobs:
 
           if [ ! -f ".github/certs/szf_exported_cert.p12" ]; then
             echo "ERROR: szf_exported_cert.p12 NOT FOUND"
-            ls -la .github/certs/ || true
             exit 1
           fi
           echo "✓ szf_exported_cert.p12 found"
 
           if [ ! -f ".github/certs/AuthKey_H3973L93M5.p8" ]; then
             echo "ERROR: AuthKey_H3973L93M5.p8 NOT FOUND"
-            ls -la .github/certs/ || true
             exit 1
           fi
           echo "✓ AuthKey_H3973L93M5.p8 found"
 
           echo "CERT_FILE_SIZE=$(stat -f%z .github/certs/szf_exported_cert.p12)" >> $GITHUB_OUTPUT
-          echo "API_KEY_FILE_SIZE=$(stat -f%z .github/certs/AuthKey_H3973L93M5.p8)" >> $GITHUB_OUTPUT
 
       - name: Compute Certificate Base64
         id: compute_cert
         run: |
-          echo "=== Compute Certificate Base64 ==="
-
           CERT_FILE=".github/certs/szf_exported_cert.p12"
-
-          if [ ! -f "$CERT_FILE" ]; then
-            echo "ERROR: Certificate file not found at $CERT_FILE"
-            exit 1
-          fi
-
           FILE_SIZE=$(stat -f%z "$CERT_FILE")
           echo "Certificate file size: $FILE_SIZE bytes"
 
-          if [ "$FILE_SIZE" -lt 1000 ]; then
-            echo "ERROR: Certificate file seems too small ($FILE_SIZE bytes)"
-            exit 1
-          fi
-
           CERT_B64=$(base64 -i "$CERT_FILE" | tr -d '\n')
-
           echo "CERT_B64 length: ${#CERT_B64}"
 
           if [ ${#CERT_B64} -lt 1000 ]; then
-            echo "ERROR: Certificate Base64 seems too short (${#CERT_B64} chars)"
+            echo "ERROR: Certificate Base64 too short"
             exit 1
           fi
 
           echo "CERT_B64=$CERT_B64" >> $GITHUB_OUTPUT
-          echo "✓ Certificate Base64 computed: ${#CERT_B64} characters"
+          echo "✓ Certificate Base64 computed"
 
       - name: Copy Provisioning Profiles
         run: |
@@ -106,17 +89,12 @@ jobs:
 
       - name: Setup Keychain for Build
         run: |
-          echo "=== Setup Keychain for Build ==="
-          
           security list-keychains -d user -s signing_temp.keychain-db login.keychain-db
           security default-keychain -s signing_temp.keychain-db
           security unlock-keychain -p "" signing_temp.keychain-db
           
           echo "=== Available Signing Identities ==="
           security find-identity -v -p codesigning signing_temp.keychain-db
-          
-          echo "=== Default Keychain ==="
-          security default-keychain
 
       - name: Copy API Key
         run: |
@@ -131,61 +109,39 @@ jobs:
           cp ".github/certs/AuthKey_H3973L93M5.p8" \
              "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
           chmod 600 "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
-
-          if [ ! -f "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8" ]; then
-            echo "ERROR: API key copy failed"
-            exit 1
-          fi
-
-          echo "✓ API key copied successfully"
+          echo "✓ API key copied"
 
       - name: Build Archive
         run: |
           echo "=== Build Archive ==="
           mkdir -p build
 
-          # Get signing identity from keychain
-          CODE_SIGN_ID=$(security find-identity -v -p codesigning signing_temp.keychain-db 2>/dev/null | grep "iPhone Distribution" | head -1 | awk '{print $2}')
-          echo "Signing identity: $CODE_SIGN_ID"
-          
-          if [ -z "$CODE_SIGN_ID" ]; then
-            echo "ERROR: No iPhone Distribution certificate found"
-            security find-identity -v -p codesigning signing_temp.keychain-db
-            exit 1
-          fi
-
-          # Use Automatic signing — Xcode will match Profile by Bundle ID
-          # Profile files are already in ~/Library/MobileDevice/Provisioning Profiles/
-          # Xcode finds matching profiles automatically based on DEVELOPMENT_TEAM + Bundle ID
-          xcodebuild \
+          # Use sdk iphoneos (device build, required for Archive)
+          # CODE_SIGN_IDENTITY="Apple Distribution" lets Xcode find cert via keychain
+          # PROVISIONING_PROFILE_SPECIFIER uses the profile Name field
+          xcrun xcodebuild \
             -project VitaMind.xcodeproj \
             -scheme VitaMind \
             -configuration Release \
-            -archivePath build/VitaMind.xcarchive \
+            -sdk iphoneos \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            CODE_SIGNING_REQUIRED=YES \
             CODE_SIGNING_ALLOWED=YES \
-            CODE_SIGN_STYLE=Automatic \
-            CODE_SIGN_IDENTITY="$CODE_SIGN_ID" \
             DEVELOPMENT_TEAM=9L6N2ZF26B \
-            -allowProvisioningUpdates \
+            PROVISIONING_PROFILE_SPECIFIER="iOS Team Store Provisioning Profile: com.ggsheng.VitaMind" \
+            -archivePath build/VitaMind.xcarchive \
             archive 2>&1 | tee build/archive.log
-
-          RESULT=${PIPESTATUS[0]}
-          echo "Exit code: $RESULT"
-
-          if [ $RESULT -ne 0 ]; then
+          
+          echo "Archive exit code: ${PIPESTATUS[0]}"
+          
+          if [ ! -f "build/VitaMind.xcarchive" ]; then
             echo "=== Build FAILED, last 100 lines ==="
             tail -100 build/archive.log
             exit 1
           fi
 
-          if [ ! -f "build/VitaMind.xcarchive" ]; then
-            echo "ERROR: Archive file not created"
-            ls -la build/
-            exit 1
-          fi
-
           echo "✓ Archive completed successfully"
-          ls -la build/
+          ls -la build/VitaMind.xcarchive
 
       - name: Upload to TestFlight
         run: |
@@ -193,4 +149,4 @@ jobs:
           echo "Archive: build/VitaMind.xcarchive"
           echo "API Key ID: H3973L93M5"
           echo "Team ID: 9L6N2ZF26B"
-          echo "Note: Full TestFlight upload requires altool configuration"
+          echo "Note: Full TestFlight upload requires altool configuration (see SOP template)"
