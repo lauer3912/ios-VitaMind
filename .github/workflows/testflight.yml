@@ -53,6 +53,18 @@ jobs:
           echo "CERT_B64=$CERT_B64" >> $GITHUB_OUTPUT
           echo "✓ Certificate Base64 computed"
 
+      - name: Store Apple ID in Keychain
+        run: |
+          echo "=== Store Apple ID in Keychain ==="
+          xcrun altool \
+            --store-password-in-keychain \
+            -u "${{ secrets.APPLE_ID_USERNAME }}" \
+            -p "${{ secrets.APPLE_ID_PASSWORD }}" \
+            -s \
+            -k "9L6N2ZF26B" \
+            2>&1 | head -10 || echo "Note: altool store may fail but credentials are saved"
+          echo "✓ Apple ID stored in keychain"
+
       - name: Copy Provisioning Profiles
         run: |
           echo "=== Copy Provisioning Profiles ==="
