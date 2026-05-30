@@ -91,15 +91,25 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             archive 2>&1 | tee build/archive.log
           
-          echo "Archive exit code: ${PIPESTATUS[0]}"
+          ARCHIVE_RESULT=${PIPESTATUS[0]}
+          echo "Archive exit code: $ARCHIVE_RESULT"
+          
+          # Allow time for file system to flush
+          sleep 3
+          
+          if [ $ARCHIVE_RESULT -ne 0 ]; then
+            echo "=== Build FAILED with exit code $ARCHIVE_RESULT ==="
+            tail -100 build/archive.log
+            exit $ARCHIVE_RESULT
+          fi
           
           if [ ! -f "build/VitaMind.xcarchive" ]; then
-            echo "=== Build FAILED, last 100 lines ==="
+            echo "=== Build FAILED: no xcarchive file ==="
             tail -100 build/archive.log
             exit 1
           fi
 
-          echo "✓ Archive completed"
+          echo "✓ Archive completed successfully"
           ls -la build/VitaMind.xcarchive
 
       - name: Export IPA with API Key Auth
