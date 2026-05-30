@@ -26,21 +26,25 @@ jobs:
       - name: Build & Test
         run: |
           mkdir -p .build
-          set +e
+          # Clear derived data to avoid conflicts
+          rm -rf .build/DerivedData
+          # List available simulators
+          xcrun simctl list devices available
+          # Build with verbose output
           xcrun xcodebuild \
             -project VitaMind.xcodeproj \
             -scheme VitaMind \
             -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
             -derivedDataPath .build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             build test 2>&1 | tee .build/build.log
           RESULT=${PIPESTATUS[0]}
           echo "Exit code: $RESULT"
-
           if [ $RESULT -ne 0 ]; then
             echo "Build or test failed"
+            cat .build/build.log | tail -100
             exit 1
           fi
           echo "Build and test succeeded"
