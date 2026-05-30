@@ -1,6 +1,6 @@
 import XCTest
 
-final class ScreenshotTests: XCTestCase {
+final class VitaMindUITests: XCTestCase {
 
     var app: XCUIApplication!
 

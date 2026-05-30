@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		070AA7FD6BC28D8620B7DD7D /* VitaMindUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD34C61A3BC68D25A0E78F75 /* VitaMindUITests.swift */; };
 		40302D22A7A518C8693CB7E4 /* VitaMindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8953DFB59D7FCB23D281364 /* VitaMindApp.swift */; };
-		425C7E3F859EF2E03D78AABE /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FB6CC79B2FF8CAC77939D9 /* ScreenshotTests.swift */; };
 		5F660D21EA1EFA6C0A96F76A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1F1493105EB65845A1E5C60 /* Assets.xcassets */; };
 		794B7C6D7B498761B8AA383D /* VitaMindUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAB14BA0911D8A73D0FDED3 /* VitaMindUnitTests.swift */; };
 		81155794BFDC433F26EC9461 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE38FD696BB8D368AE84605A /* ContentView.swift */; };
@@ -27,6 +27,13 @@
 			remoteInfo = VitaMindWidget;
 		};
 		4C5F7946E7A91E4D95CBD0A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A8A4ED68A0AE0890B2E176F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A28B1FE4162CC44B1701BC6D;
+			remoteInfo = VitaMind;
+		};
+		A6BE674A19E006CC0AF96B66 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A8A4ED68A0AE0890B2E176F /* Project object */;
 			proxyType = 1;
@@ -53,8 +60,8 @@
 		0EC969275DDBD73E89660F54 /* VitaMindTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitaMindTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E6F12C59BA52485127707F4 /* VitaMind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaMind.entitlements; sourceTree = "<group>"; };
 		20F1E2DC2995BA8409DABDE8 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		280BA09B031FD9476678CF44 /* VitaMindUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitaMindUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EAE5C0FBBD79644F15B301B /* VitaMindWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = VitaMindWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		39FB6CC79B2FF8CAC77939D9 /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
 		492354AE38CB673E9D2BEA64 /* VitaMindWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaMindWidget.entitlements; sourceTree = "<group>"; };
 		B8953DFB59D7FCB23D281364 /* VitaMindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindApp.swift; sourceTree = "<group>"; };
 		BD17787F6B6965D4B1957F63 /* VitaMindWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindWidget.swift; sourceTree = "<group>"; };
@@ -65,6 +72,7 @@
 		EE3A32EE9388BB6C75E885B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EEAB14BA0911D8A73D0FDED3 /* VitaMindUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindUnitTests.swift; sourceTree = "<group>"; };
 		F9B566566CFF1E82C30AA2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FD34C61A3BC68D25A0E78F75 /* VitaMindUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -73,6 +81,7 @@
 			children = (
 				C0528451B04F7CF3573B7946 /* VitaMind.app */,
 				0EC969275DDBD73E89660F54 /* VitaMindTests.xctest */,
+				280BA09B031FD9476678CF44 /* VitaMindUITests.xctest */,
 				2EAE5C0FBBD79644F15B301B /* VitaMindWidget.appex */,
 			);
 			name = Products;
@@ -86,11 +95,20 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		7D822DE5C5357571478C38EC /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				FD34C61A3BC68D25A0E78F75 /* VitaMindUITests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
 		834BADB5A96B73881705E429 = {
 			isa = PBXGroup;
 			children = (
 				C614369A3BCB16E77C3C27A7 /* Sources */,
 				91BD5149998EAE93BA606E7F /* Tests */,
+				7D822DE5C5357571478C38EC /* UITests */,
 				BB6964C64FAEDD3930BD5AA6 /* Widget */,
 				41142BEDE69065B91B3DCA81 /* Products */,
 			);
@@ -99,7 +117,6 @@
 		91BD5149998EAE93BA606E7F /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				39FB6CC79B2FF8CAC77939D9 /* ScreenshotTests.swift */,
 				EEAB14BA0911D8A73D0FDED3 /* VitaMindUnitTests.swift */,
 			);
 			path = Tests;
@@ -188,6 +205,24 @@
 			productReference = C0528451B04F7CF3573B7946 /* VitaMind.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F9D83A1ED3F6CB6F64F1A4DB /* VitaMindUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42D043EFA44E7E864BC0017F /* Build configuration list for PBXNativeTarget "VitaMindUITests" */;
+			buildPhases = (
+				EAF9540825558714E5120396 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CD41DA800838F5388B33F2FD /* PBXTargetDependency */,
+			);
+			name = VitaMindUITests;
+			packageProductDependencies = (
+			);
+			productName = VitaMindUITests;
+			productReference = 280BA09B031FD9476678CF44 /* VitaMindUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -209,6 +244,11 @@
 						DevelopmentTeam = 9L6N2ZF26B;
 						ProvisioningStyle = Automatic;
 					};
+					F9D83A1ED3F6CB6F64F1A4DB = {
+						DevelopmentTeam = 9L6N2ZF26B;
+						ProvisioningStyle = Automatic;
+						TestTargetID = A28B1FE4162CC44B1701BC6D;
+					};
 				};
 			};
 			buildConfigurationList = 75C639859B554E9B324F0F96 /* Build configuration list for PBXProject "VitaMind" */;
@@ -227,6 +267,7 @@
 			targets = (
 				A28B1FE4162CC44B1701BC6D /* VitaMind */,
 				32445C35443AD29BB939734A /* VitaMindTests */,
+				F9D83A1ED3F6CB6F64F1A4DB /* VitaMindUITests */,
 				32E4496E5466939E3813DA47 /* VitaMindWidget */,
 			);
 		};
@@ -257,7 +298,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				425C7E3F859EF2E03D78AABE /* ScreenshotTests.swift in Sources */,
 				794B7C6D7B498761B8AA383D /* VitaMindUnitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,6 +308,14 @@
 			files = (
 				81155794BFDC433F26EC9461 /* ContentView.swift in Sources */,
 				40302D22A7A518C8693CB7E4 /* VitaMindApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EAF9540825558714E5120396 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				070AA7FD6BC28D8620B7DD7D /* VitaMindUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +339,11 @@
 			isa = PBXTargetDependency;
 			target = 32E4496E5466939E3813DA47 /* VitaMindWidget */;
 			targetProxy = 18A392929F7752DCC80ED2F8 /* PBXContainerItemProxy */;
+		};
+		CD41DA800838F5388B33F2FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A28B1FE4162CC44B1701BC6D /* VitaMind */;
+			targetProxy = A6BE674A19E006CC0AF96B66 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -326,6 +379,26 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
+		};
+		276B9C8B979798A5F4FA2D3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_ENTITLEMENTS = "";
+				DEVELOPMENT_TEAM = 9L6N2ZF26B;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET = "$(BUILT_PRODUCTS_DIR)/VitaMind.app/VitaMind";
+				TEST_TARGET_NAME = VitaMind;
+			};
+			name = Debug;
 		};
 		46B8560734E8719BE364A3E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -493,6 +566,26 @@
 			};
 			name = Debug;
 		};
+		D84D7203D685637C2A898E37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_ENTITLEMENTS = "";
+				DEVELOPMENT_TEAM = 9L6N2ZF26B;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET = "$(BUILT_PRODUCTS_DIR)/VitaMind.app/VitaMind";
+				TEST_TARGET_NAME = VitaMind;
+			};
+			name = Release;
+		};
 		D96019C26FDB99ABE9EBCC78 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -531,6 +624,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		42D043EFA44E7E864BC0017F /* Build configuration list for PBXNativeTarget "VitaMindUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				276B9C8B979798A5F4FA2D3D /* Debug */,
+				D84D7203D685637C2A898E37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		5C7D687556DBFC8F40F56B13 /* Build configuration list for PBXNativeTarget "VitaMindTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

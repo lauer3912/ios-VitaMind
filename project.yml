@@ -96,6 +96,24 @@ targets:
     dependencies:
       - target: VitaMind
 
+  VitaMindUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+        type: group
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ggsheng.VitaMind.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET: "$(BUILT_PRODUCTS_DIR)/VitaMind.app/VitaMind"
+        CODE_SIGN_ENTITLEMENTS: ""
+        DEVELOPMENT_TEAM: 9L6N2ZF26B
+    dependencies:
+      - target: VitaMind
+
 schemes:
   VitaMind:
     build:
@@ -108,6 +126,7 @@ schemes:
       config: Debug
       targets:
         - VitaMindTests
+        - VitaMindUITests
     profile:
       config: Release
     analyze:
