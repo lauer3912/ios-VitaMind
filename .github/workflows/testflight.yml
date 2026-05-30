@@ -82,6 +82,7 @@ jobs:
             echo "✓ VitaMind_App_Store.mobileprovision copied"
           else
             echo "⚠ VitaMind_App_Store.mobileprovision not found"
+            exit 1
           fi
           
           if [ -f ".github/profiles/VitaMindWidget_App_Store.mobileprovision" ]; then
@@ -90,6 +91,7 @@ jobs:
             echo "✓ VitaMindWidget_App_Store.mobileprovision copied"
           else
             echo "⚠ VitaMindWidget_App_Store.mobileprovision not found"
+            exit 1
           fi
 
           echo "=== Current Provisioning Profiles ==="
@@ -103,12 +105,26 @@ jobs:
           create-keychain: true
           keychain-password: ""
 
-      - name: List Signing Identities
+      - name: Setup Keychain for Build
         run: |
-          echo "=== Available Signing Identities ==="
-          security find-identity -v -p codesigning login.keychain
+          echo "=== Setup Keychain for Build ==="
+          
+          # The import-codesign-certs action creates signing_temp.keychain-db
+          # Add it to the keychain search list
+          security list-keychains -d user -s signing_temp.keychain-db login.keychain-db
+          security default-keychain -s signing_temp.keychain-db
+          security unlock-keychain -p "" signing_temp.keychain-db
+          
+          echo "=== Available Signing Identities (signing_temp) ==="
+          security find-identity -v -p codesigning signing_temp.keychain-db || echo "None found in signing_temp"
+          
+          echo "=== Available Signing Identities (login) ==="
+          security find-identity -v -p codesigning login.keychain-db || echo "None found in login"
+          
           echo "=== Default Keychain ==="
           security default-keychain
+          
+          echo "=== Keychain Search List ==="
           security list-keychains -d user
 
       - name: Copy API Key
@@ -138,13 +154,25 @@ jobs:
           echo "=== Build Archive ==="
           mkdir -p build
 
+          # Get signing identity from the temp keychain
+          CODE_SIGN_ID=$(security find-identity -v -p codesigning signing_temp.keychain-db 2>/dev/null | grep "Apple Distribution" | head -1 | awk '{print $2}')
+          echo "Signing identity found: $CODE_SIGN_ID"
+          
+          if [ -z "$CODE_SIGN_ID" ]; then
+            echo "ERROR: No Apple Distribution certificate found in signing_temp keychain"
+            echo "Available identities:"
+            security find-identity -v -p codesigning signing_temp.keychain-db
+            exit 1
+          fi
+
           xcodebuild \
             -project VitaMind.xcodeproj \
             -scheme VitaMind \
             -configuration Release \
             -archivePath build/VitaMind.xcarchive \
             CODE_SIGNING_ALLOWED=YES \
-            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="$CODE_SIGN_ID" \
             DEVELOPMENT_TEAM=9L6N2ZF26B \
             -allowProvisioningUpdates \
             archive 2>&1 | tee build/archive.log
