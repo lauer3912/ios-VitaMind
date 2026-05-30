@@ -15,7 +15,8 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.5.0"
+          xcode-version: "16.0"
+
 
       - name: Check for Certificates and API Key
         id: check_certs
