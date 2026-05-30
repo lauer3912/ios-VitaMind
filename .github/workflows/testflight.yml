@@ -100,31 +100,13 @@ jobs:
         with:
           p12-file-base64: ${{ steps.compute_cert.outputs.CERT_B64 }}
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
-          custom_keychain: /Users/runner/build/codesign.keychain
+          create-keychain: true
+          keychain-password: ""
 
-      - name: Setup Keychain for Xcode
+      - name: List Signing Identities
         run: |
-          echo "=== Setup Keychain for Xcode ==="
-          
-          # Find the imported keychain (created by import-codesign-certs)
-          KEYCHAIN_PATH=$(find ~/Library/Keychains -name "*XC*" -type f 2>/dev/null | head -1)
-          echo "Found keychain: $KEYCHAIN_PATH"
-          
-          # Create default keychain if none found
-          if [ -z "$KEYCHAIN_PATH" ]; then
-            security create-keychain -p "" ~/Library/Keychains/login.keychain-db
-            KEYCHAIN_PATH=~/Library/Keychains/login.keychain-db
-            echo "Created login keychain: $KEYCHAIN_PATH"
-          fi
-          
-          # Unlock the keychain
-          security unlock-keychain -p "" "$KEYCHAIN_PATH"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
-          
-          # List available signing identities
           echo "=== Available Signing Identities ==="
-          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
-          
+          security find-identity -v -p codesigning login.keychain
           echo "=== Default Keychain ==="
           security default-keychain
           security list-keychains -d user
