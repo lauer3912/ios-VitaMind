@@ -83,12 +83,36 @@ targets:
     sources:
       - path: Tests
         type: group
+        excludes:
+          - "**/*.storyboard"
+          - "**/E2ETests.swift"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ggsheng.VitaMind.tests
         GENERATE_INFOPLIST_FILE: YES
-        TEST_HOST: "$(inherited)"
-        BUNDLE_LOADER: "$(inherited)"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/VitaMind.app/VitaMind"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        CODE_SIGN_ENTITLEMENTS: ""
+        DEVELOPMENT_TEAM: 9L6N2ZF26B
+    dependencies:
+      - target: VitaMind
+
+  VitaMindUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: Tests
+        type: group
+        excludes:
+          - "**/*.storyboard"
+          - "**/VitaMindUnitTests.swift"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ggsheng.VitaMind.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET: "$(BUILT_PRODUCTS_DIR)/VitaMind.app/VitaMind"
+        CODE_SIGN_ENTITLEMENTS: ""
+        DEVELOPMENT_TEAM: 9L6N2ZF26B
     dependencies:
       - target: VitaMind
 
@@ -104,6 +128,7 @@ schemes:
       config: Debug
       targets:
         - VitaMindTests
+        - VitaMindUITests
     profile:
       config: Release
     analyze:
