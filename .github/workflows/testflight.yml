@@ -87,23 +87,39 @@ jobs:
           echo "=== Current Provisioning Profiles ==="
           ls -la "$HOME/Library/MobileDevice/Provisioning Profiles/"
 
-      - name: Import Code-Signing Certificates
-        run: |
-          echo "=== Import Code-Signing Certificates ==="
-
-          if [ -z "${{ steps.compute_cert.outputs.CERT_B64 }}" ]; then
-            echo "ERROR: CERT_B64 is empty"
-            exit 1
-          fi
-
-          echo "CERT_B64 length: ${{ steps.compute_cert.outputs.CERT_B64 }}"
-          echo "Importing certificate..."
-
       - name: Import Certificate via Apple Actions
         uses: Apple-Actions/import-codesign-certs@v7
         with:
           p12-file-base64: ${{ steps.compute_cert.outputs.CERT_B64 }}
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+          custom_keychain: /Users/runner/build/codesign.keychain
+
+      - name: Setup Keychain for Xcode
+        run: |
+          echo "=== Setup Keychain for Xcode ==="
+          
+          # Find the imported keychain (created by import-codesign-certs)
+          KEYCHAIN_PATH=$(find ~/Library/Keychains -name "*XC*" -type f 2>/dev/null | head -1)
+          echo "Found keychain: $KEYCHAIN_PATH"
+          
+          # Create default keychain if none found
+          if [ -z "$KEYCHAIN_PATH" ]; then
+            security create-keychain -p "" ~/Library/Keychains/login.keychain-db
+            KEYCHAIN_PATH=~/Library/Keychains/login.keychain-db
+            echo "Created login keychain: $KEYCHAIN_PATH"
+          fi
+          
+          # Unlock the keychain
+          security unlock-keychain -p "" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          
+          # List available signing identities
+          echo "=== Available Signing Identities ==="
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+          
+          echo "=== Default Keychain ==="
+          security default-keychain
+          security list-keychains -d user
 
       - name: Copy API Key
         run: |
@@ -132,13 +148,23 @@ jobs:
           echo "=== Build Archive ==="
           mkdir -p build
 
+          # Find signing identity from custom keychain
+          CODESIGN_KEYCHAIN="/Users/runner/build/codesign.keychain"
+          security list-keychains -d user -s "$CODESIGN_KEYCHAIN" ~/Library/Keychains/login.keychain-db
+          security default-keychain -s "$CODESIGN_KEYCHAIN"
+          security unlock-keychain -p "" "$CODESIGN_KEYCHAIN"
+          
+          CODE_SIGN_ID=$(security find-identity -v -p codesigning "$CODESIGN_KEYCHAIN" | grep "Apple Distribution" | head -1 | awk '{print $2}')
+          echo "Found signing identity: $CODE_SIGN_ID"
+
           xcodebuild \
             -project VitaMind.xcodeproj \
             -scheme VitaMind \
             -configuration Release \
             -archivePath build/VitaMind.xcarchive \
             CODE_SIGNING_ALLOWED=YES \
-            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="$CODE_SIGN_ID" \
             DEVELOPMENT_TEAM=9L6N2ZF26B \
             -allowProvisioningUpdates \
             archive 2>&1 | tee build/archive.log
