@@ -74,22 +74,24 @@ jobs:
         run: |
           echo "=== Setup API Key ==="
           mkdir -p "$HOME/.appstoreconnect/private_keys"
-          cp .github/certs/AuthKey_H3973L93M5.p8 "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
+          mkdir -p "$GITHUB_WORKSPACE/build"
+          cp "$GITHUB_WORKSPACE/.github/certs/AuthKey_H3973L93M5.p8" "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
           chmod 600 "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8"
           ls -la "$HOME/.appstoreconnect/private_keys/"
 
       - name: Build Archive (Skip Signing)
         run: |
           echo "=== Build Archive (CODE_SIGNING_ALLOWED=NO) ==="
-          mkdir -p build
+          mkdir -p "$GITHUB_WORKSPACE/build"
 
           xcrun xcodebuild \
-            -project VitaMind.xcodeproj \
+            -project "$GITHUB_WORKSPACE/VitaMind.xcodeproj" \
             -scheme VitaMind \
             -configuration Release \
             -sdk iphoneos \
+            -archivePath "$GITHUB_WORKSPACE/build/VitaMind.xcarchive" \
             CODE_SIGNING_ALLOWED=NO \
-            archive 2>&1 | tee build/archive.log
+            archive 2>&1 | tee "$GITHUB_WORKSPACE/build/archive.log"
           
           ARCHIVE_RESULT=${PIPESTATUS[0]}
           echo "Archive exit code: $ARCHIVE_RESULT"
@@ -99,26 +101,26 @@ jobs:
           
           if [ $ARCHIVE_RESULT -ne 0 ]; then
             echo "=== Build FAILED with exit code $ARCHIVE_RESULT ==="
-            tail -100 build/archive.log
+            tail -100 "$GITHUB_WORKSPACE/build/archive.log"
             exit $ARCHIVE_RESULT
           fi
           
-          if [ ! -f "build/VitaMind.xcarchive" ]; then
+          if [ ! -f "$GITHUB_WORKSPACE/build/VitaMind.xcarchive" ]; then
             echo "=== Build FAILED: no xcarchive file ==="
-            tail -100 build/archive.log
+            tail -100 "$GITHUB_WORKSPACE/build/archive.log"
             exit 1
           fi
 
           echo "✓ Archive completed successfully"
-          ls -la build/VitaMind.xcarchive
+          ls -la "$GITHUB_WORKSPACE/build/VitaMind.xcarchive"
 
       - name: Export IPA with API Key Auth
         run: |
           echo "=== Export IPA with API Key Auth ==="
-          mkdir -p build
+          mkdir -p "$GITHUB_WORKSPACE/build"
 
           # ExportOptions.plist - method=app-store-connect lets xcodebuild auto-fetch profiles via API Key
-          cat > build/ExportOptions.plist << 'EOF'
+          cat > "$GITHUB_WORKSPACE/build/ExportOptions.plist" << 'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -135,22 +137,22 @@ jobs:
 
           xcrun xcodebuild \
             -exportArchive \
-            -archivePath build/VitaMind.xcarchive \
-            -exportOptionsPlist build/ExportOptions.plist \
-            -exportPath build \
+            -archivePath "$GITHUB_WORKSPACE/build/VitaMind.xcarchive" \
+            -exportOptionsPlist "$GITHUB_WORKSPACE/build/ExportOptions.plist" \
+            -exportPath "$GITHUB_WORKSPACE/build" \
             -allowProvisioningUpdates \
             -authenticationKeyPath "$HOME/.appstoreconnect/private_keys/ApiKey_H3973L93M5.p8" \
             -authenticationKeyID H3973L93M5 \
             -authenticationKeyIssuerID b2a00f88-3a8d-40d0-b148-1f1db92e10b7 \
-            2>&1 | tee build/export.log
+            2>&1 | tee "$GITHUB_WORKSPACE/build/export.log"
           
           echo "Export exit code: ${PIPESTATUS[0]}"
-          ls -la build/*.ipa 2>/dev/null || echo "No IPA found"
+          ls -la "$GITHUB_WORKSPACE/build/"*.ipa 2>/dev/null || echo "No IPA found"
 
       - name: Upload to TestFlight
         run: |
           echo "=== Upload to TestFlight ==="
-          IPA=$(ls build/*.ipa 2>/dev/null | head -1)
+          IPA=$(ls "$GITHUB_WORKSPACE/build/"*.ipa 2>/dev/null | head -1)
           if [ -z "$IPA" ]; then
             echo "ERROR: No IPA found"
             exit 1
@@ -162,5 +164,5 @@ jobs:
             -t ios \
             --apiKey "H3973L93M5" \
             --apiIssuer "b2a00f88-3a8d-40d0-b148-1f1db92e10b7" \
-            2>&1 | tee build/upload.log
+            2>&1 | tee "$GITHUB_WORKSPACE/build/upload.log"
           echo "Upload exit code: ${PIPESTATUS[0]}"
