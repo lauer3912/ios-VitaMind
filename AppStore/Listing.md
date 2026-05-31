@@ -75,14 +75,14 @@ mindfulness, water, reminder, vitals, healthkit, monitoring
 
 ## 5. Support URL
 
-**Developer Website:** https://techidaily.com/vitamind-support
+**Developer Website:** https://lauer3912.github.io/ios-VitaMind/docs/
 **Contact Email:** support@techidaily.com
 
 ---
 
 ## 6. Privacy Policy URL
 
-**Privacy Policy:** https://techidaily.com/vitamind-privacy
+**Privacy Policy:** https://lauer3912.github.io/ios-VitaMind/docs/PrivacyPolicy.html
 **Local Privacy Policy HTML:** AppStore/Docs/PrivacyPolicy.html
 
 ---

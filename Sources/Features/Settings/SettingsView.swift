@@ -321,11 +321,11 @@ struct AboutView: View {
             }
             
             Section {
-                Link(destination: URL(string: "https://techidaily.com/vitamind-privacy")!) {
+                Link(destination: URL(string: "https://lauer3912.github.io/ios-VitaMind/docs/PrivacyPolicy.html")!) {
                     Label("Privacy Policy", systemImage: "hand.raised")
                 }
                 
-                Link(destination: URL(string: "https://techidaily.com/vitamind-terms")!) {
+                Link(destination: URL(string: "https://lauer3912.github.io/ios-VitaMind/docs/TermsOfService.html")!) {
                     Label("Terms of Service", systemImage: "doc.text")
                 }
             } header: {
