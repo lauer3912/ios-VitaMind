@@ -3,21 +3,29 @@ import XCTest
 // MARK: - Shared Tab Helper
 extension XCTestCase {
     func tapTabButton(in app: XCUIApplication, label: String) {
-        // Direct coordinate-based tapping - works on all devices consistently
-        let tabIndexMap = ["Pocket": 0, "Habits": 1, "Coach": 2, "Collection": 3]
-        guard let targetIndex = tabIndexMap[label] else { return }
+        let indexMap = ["Pocket": 0, "Habits": 1, "Coach": 2, "Collection": 3]
+        guard let targetIndex = indexMap[label] else { return }
         
-        // Calculate normalized position: each tab gets 1/4 of screen width
-        // Tab centers at: 0.125 (Pocket), 0.375 (Habits), 0.625 (Coach), 0.875 (Collection)
-        let normalizedX = (CGFloat(targetIndex) + 0.5) / 4.0
-        let normalizedY: CGFloat = 0.96  // Near bottom of screen (tab bar area)
+        // Get window
+        let window = app.windows.firstMatch
+        let frame = window.frame
         
-        let coordinate = app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: normalizedX, dy: normalizedY))
-        coordinate.tap()
+        // Use swipe gestures on the content area to switch tabs
+        // In SwiftUI TabView, swiping left/right changes tabs
+        // We need to swipe from right-to-left to go forward (next tab)
+        let swipeCount = targetIndex  // Start from tab 0, swipe N times to get to tab N
         
-        // Wait for tab switch animation to complete
+        // Swipe on the main content area (center of screen)
+        let centerY = frame.height * 0.5  // Middle of screen
+        
+        for _ in 0..<swipeCount {
+            // XCTest swipe uses velocity, so this should work on TabView
+            window.swipeLeft()
+            Thread.sleep(forTimeInterval: 1.0)
+        }
+        
         Thread.sleep(forTimeInterval: 2.0)
-        print("✓ Tapped tab: \(label) at (\(String(format: "%.3f", normalizedX)), \(String(format: "%.3f", normalizedY)))")
+        print("✓ Switched to tab: \(label) via \(swipeCount) swipe(s)")
     }
     
     func captureScreenshot(in app: XCUIApplication, name: String) {

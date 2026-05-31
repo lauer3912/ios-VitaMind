@@ -19,6 +19,7 @@ struct ContentView: View {
                     }
                     .tag(0)
                     .accessibilityIdentifier("tab_home")
+                    .accessibilityIdentifier("tab_button_0")
                 
                 HabitsView()
                     .tabItem {
@@ -34,6 +35,7 @@ struct ContentView: View {
                     }
                     .tag(2)
                     .accessibilityIdentifier("tab_coach")
+                    .accessibilityIdentifier("tab_button_2")
                 
                 CollectionView()
                     .tabItem {
@@ -41,6 +43,7 @@ struct ContentView: View {
                     }
                     .tag(3)
                     .accessibilityIdentifier("tab_collection")
+                    .accessibilityIdentifier("tab_button_3")
             }
             .tint(VitaTheme.Colors.primary)
             
