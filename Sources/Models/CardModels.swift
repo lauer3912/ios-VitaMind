@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 // MARK: - Rarity
@@ -54,7 +55,7 @@ enum CardType: String, Codable, CaseIterable {
 
 // MARK: - HealthCard
 struct HealthCard: Identifiable, Codable, Equatable {
-    let id: UUID
+    var id: String
     let name: String
     let description: String
     let type: CardType
@@ -74,7 +75,7 @@ struct HealthCard: Identifiable, Codable, Equatable {
     }
     
     init(
-        id: UUID = UUID(),
+        id: String = UUID().uuidString,
         name: String,
         description: String = "",
         type: CardType,
@@ -176,7 +177,7 @@ struct HealthCard: Identifiable, Codable, Equatable {
 
 // MARK: - HabitCard
 struct HabitCard: Identifiable, Codable, Equatable {
-    let id: UUID
+    var id: String
     let name: String
     let description: String
     let icon: String
@@ -187,6 +188,7 @@ struct HabitCard: Identifiable, Codable, Equatable {
     var lastCompleted: Date?
     var isCompletedToday: Bool
     let rarity: CardRarity
+    var xpReward: Int
     
     var streakIcon: String {
         if longestStreak >= 30 { return "flame.circle.fill" }
@@ -203,7 +205,7 @@ struct HabitCard: Identifiable, Codable, Equatable {
     }
     
     init(
-        id: UUID = UUID(),
+        id: String = UUID().uuidString,
         name: String,
         description: String = "",
         icon: String,
@@ -213,6 +215,7 @@ struct HabitCard: Identifiable, Codable, Equatable {
         longestStreak: Int = 0,
         lastCompleted: Date? = nil,
         isCompletedToday: Bool = false,
+        xpReward: Int = 20,
         rarity: CardRarity = .common
     ) {
         self.id = id
@@ -225,29 +228,25 @@ struct HabitCard: Identifiable, Codable, Equatable {
         self.longestStreak = longestStreak
         self.lastCompleted = lastCompleted
         self.isCompletedToday = isCompletedToday
+        self.xpReward = xpReward
         self.rarity = rarity
     }
 }
 
 // MARK: - Achievement
 struct Achievement: Identifiable, Codable {
-    let id: UUID
+    var id: String
     let name: String
     let description: String
     let icon: String
-    let requirement: Int
     var progress: Int
+    var progressTarget: Int
     var isUnlocked: Bool
     let rarity: CardRarity
-    let xpReward: Int
-    
-    var progressPercent: Double {
-        guard requirement > 0 else { return 0 }
-        return min(Double(progress) / Double(requirement), 1.0)
-    }
+    var xpReward: Int
     
     init(
-        id: UUID = UUID(),
+        id: String = UUID().uuidString,
         name: String,
         description: String,
         icon: String,
@@ -261,11 +260,16 @@ struct Achievement: Identifiable, Codable {
         self.name = name
         self.description = description
         self.icon = icon
-        self.requirement = requirement
         self.progress = progress
+        self.progressTarget = requirement
         self.isUnlocked = isUnlocked
         self.rarity = rarity
         self.xpReward = xpReward
+    }
+    
+    var progressPercent: Double {
+        guard progressTarget > 0 else { return 0 }
+        return min(Double(progress) / Double(progressTarget), 1.0)
     }
 }
 
