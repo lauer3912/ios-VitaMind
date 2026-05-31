@@ -18,11 +18,9 @@
     { "filename" : "Icon-80@2x.png", "idiom" : "universal", "platform" : "ios", "scale" : "2x", "size" : "40x40" },
     { "filename" : "Icon-80@3x.png", "idiom" : "universal", "platform" : "ios", "scale" : "3x", "size" : "40x40" },
     { "filename" : "Icon-83.5@2x.png", "idiom" : "universal", "platform" : "ios", "scale" : "2x", "size" : "83.5x83.5" },
-    { "filename" : "Icon-120@2x.png", "idiom" : "universal", "platform" : "ios", "scale" : "2x", "size" : "60x60" },
-    { "filename" : "Icon-120@3x.png", "idiom" : "universal", "platform" : "ios", "scale" : "3x", "size" : "60x60" },
-    { "filename" : "Icon-1024@1x.png", "idiom" : "universal", "platform" : "ios", "size" : "1024x1024" },
-    { "idiom" : "ipad", "scale" : "1x", "size" : "167x167" },
-    { "idiom" : "ipad", "scale" : "2x", "size" : "167x167" }
+    { "idiom" : "ipad", "platform" : "ios", "scale" : "1x", "size" : "167x167" },
+    { "idiom" : "ipad", "platform" : "ios", "scale" : "2x", "size" : "167x167" },
+    { "filename" : "Icon-1024@1x.png", "idiom" : "universal", "platform" : "ios", "scale" : "1x", "size" : "1024x1024" }
   ],
   "info" : { "author" : "xcode", "version" : 1 }
 }

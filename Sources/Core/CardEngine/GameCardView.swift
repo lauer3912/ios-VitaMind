@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Card View
+// MARK: - 3D Card View
 struct GameCardView: View {
     let card: HealthCard
     let isInteractive: Bool
@@ -9,39 +9,87 @@ struct GameCardView: View {
     @State private var isFlipped = false
     @State private var rotation: Double = 0
     @State private var glowOpacity: Double = 0
+    @State private var isPressed = false
+    @State private var cardLift: CGFloat = 0
+    @State private var shinePosition: CGFloat = -100
     
     var body: some View {
         ZStack {
+            // Shadow layer (makes card appear lifted)
+            RoundedRectangle(cornerRadius: VitaTheme.Radius.card)
+                .fill(Color.black.opacity(0.4))
+                .blur(radius: 12)
+                .offset(y: 8 + cardLift)
+                .scaleEffect(0.95)
+            
             // Glow effect for rare cards
             if card.rarity.stars >= 3 {
                 RoundedRectangle(cornerRadius: VitaTheme.Radius.card)
                     .fill(card.rarity.glowColor)
-                    .blur(radius: 20)
+                    .blur(radius: 25)
                     .opacity(glowOpacity)
+                    .offset(y: cardLift)
             }
             
-            // Card face
-            CardFaceView(card: card, isFlipped: isFlipped)
-                .rotation3DEffect(
-                    .degrees(rotation),
-                    axis: (x: 0, y: 1, z: 0)
+            // Main Card with 3D transform
+            ZStack {
+                // Card face with perspective
+                CardFaceView(card: card, isFlipped: isFlipped)
+                    .rotation3DEffect(
+                        .degrees(rotation),
+                        axis: (x: 0, y: 1, z: 0),
+                        perspective: 0.3
+                    )
+                    .offset(y: cardLift)
+                    
+                // Shine overlay animation
+                LinearGradient(
+                    colors: [
+                        .white.opacity(0),
+                        .white.opacity(0.1),
+                        .white.opacity(0),
+                        .white.opacity(0.2),
+                        .white.opacity(0)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
                 )
+                .mask(
+                    RoundedRectangle(cornerRadius: VitaTheme.Radius.card)
+                        .padding(20)
+                )
+                .offset(x: shinePosition, y: cardLift)
+                .clipped()
+            }
         }
         .frame(width: 160, height: 220)
+        .scaleEffect(isPressed ? 0.96 : 1.0)
         .onAppear {
             if card.rarity.stars >= 4 {
                 withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
                     glowOpacity = 0.6
                 }
             }
+            // Start shine animation
+            withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
+                shinePosition = 200
+            }
         }
         .onTapGesture {
             if isInteractive {
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
                     rotation += 180
+                    isPressed = true
+                    cardLift = -10
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     isFlipped.toggle()
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        isPressed = false
+                        cardLift = 0
+                    }
                 }
                 onTap?()
             }
@@ -172,6 +220,7 @@ struct CardFrontView: View {
                     RoundedRectangle(cornerRadius: VitaTheme.Radius.card)
                         .stroke(card.rarity.color.opacity(0.3), lineWidth: 1)
                 )
+                .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
         )
     }
 }
@@ -182,6 +231,7 @@ struct CardBackView: View {
         ZStack {
             RoundedRectangle(cornerRadius: VitaTheme.Radius.card)
                 .fill(VitaTheme.Colors.surface)
+                .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
             
             RoundedRectangle(cornerRadius: VitaTheme.Radius.card)
                 .stroke(VitaTheme.Colors.primary, lineWidth: 2)
