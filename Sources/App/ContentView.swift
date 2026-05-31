@@ -26,6 +26,7 @@ struct ContentView: View {
                     }
                     .tag(1)
                     .accessibilityIdentifier("tab_habits")
+                    .accessibilityIdentifier("tab_button_1")
                 
                 CoachView()
                     .tabItem {

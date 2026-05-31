@@ -1,5 +1,42 @@
 import XCTest
 
+// MARK: - Shared Tab Helper
+extension XCTestCase {
+    func tapTabButton(in app: XCUIApplication, label: String) {
+        // Direct coordinate-based tapping - works on all devices consistently
+        let tabIndexMap = ["Pocket": 0, "Habits": 1, "Coach": 2, "Collection": 3]
+        guard let targetIndex = tabIndexMap[label] else { return }
+        
+        // Calculate normalized position: each tab gets 1/4 of screen width
+        // Tab centers at: 0.125 (Pocket), 0.375 (Habits), 0.625 (Coach), 0.875 (Collection)
+        let normalizedX = (CGFloat(targetIndex) + 0.5) / 4.0
+        let normalizedY: CGFloat = 0.96  // Near bottom of screen (tab bar area)
+        
+        let coordinate = app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: normalizedX, dy: normalizedY))
+        coordinate.tap()
+        
+        // Wait for tab switch animation to complete
+        Thread.sleep(forTimeInterval: 2.0)
+        print("✓ Tapped tab: \(label) at (\(String(format: "%.3f", normalizedX)), \(String(format: "%.3f", normalizedY)))")
+    }
+    
+    func captureScreenshot(in app: XCUIApplication, name: String) {
+        let path = "/tmp/\(name).png"
+        let image = app.windows.firstMatch.screenshot()
+        let data = image.pngRepresentation
+        try? data.write(to: URL(fileURLWithPath: path))
+        print("📸 Captured: \(path)")
+        
+        // Verify file exists and has content
+        if let attrs = try? FileManager.default.attributesOfItem(atPath: path),
+           let size = attrs[.size] as? Int {
+            print("   Size: \(size) bytes")
+        }
+    }
+}
+
+// MARK: - iPhone 17 Pro Max Tests
+
 final class VitaPocketUITests: XCTestCase {
 
     var app: XCUIApplication!
@@ -7,8 +44,7 @@ final class VitaPocketUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        // Enable Point Accurate mode for precise screenshots
-        app.launchArguments = ["--uitesting", "-AppleContinuousContinuously"]
+        app.launchArguments = ["--uitesting"]
         app.launch()
         Thread.sleep(forTimeInterval: 3.0)
     }
@@ -17,51 +53,25 @@ final class VitaPocketUITests: XCTestCase {
         app.terminate()
     }
 
-    // MARK: - Screenshot Capture
-
-    private func capture(_ name: String) {
-        let path = "/tmp/\(name).png"
-        let image = app.windows.firstMatch.screenshot()
-        let data = image.pngRepresentation
-        try? data.write(to: URL(fileURLWithPath: path))
-        print("📸 Captured: \(path)")
-        
-        // Get file size for verification
-        if let attrs = try? FileManager.default.attributesOfItem(atPath: path),
-           let size = attrs[.size] as? Int {
-            print("   Size: \(size) bytes")
-        }
-    }
-
-    private func tapTab(_ label: String) {
-        let button = app.buttons[label]
-        button.tap()
-        Thread.sleep(forTimeInterval: 1.5)
-        print("✓ Tapped tab: \(label)")
-    }
-
-    // MARK: - Test: All Tabs (iPhone 17 Pro Max)
-    
     func testAllTabs() {
         print("=== iPhone 17 Pro Max - Capturing screenshots ===")
         
         // Tab 1: Pocket
-        capture("vp_tab1_pocket")
+        captureScreenshot(in: app, name: "vp_tab1_pocket")
         
         // Tab 2: Habits
-        tapTab("Habits")
-        capture("vp_tab2_habits")
+        tapTabButton(in: app, label: "Habits")
+        captureScreenshot(in: app, name: "vp_tab2_habits")
         
         // Tab 3: Coach
-        tapTab("Coach")
-        capture("vp_tab3_coach")
+        tapTabButton(in: app, label: "Coach")
+        captureScreenshot(in: app, name: "vp_tab3_coach")
         
         // Tab 4: Collection
-        tapTab("Collection")
-        capture("vp_tab4_collection")
+        tapTabButton(in: app, label: "Collection")
+        captureScreenshot(in: app, name: "vp_tab4_collection")
         
         print("=== iPhone 17 Pro Max - All tabs captured ===")
-        Thread.sleep(forTimeInterval: 2.0)
     }
 }
 
@@ -83,41 +93,25 @@ final class VitaPocketiPadTests: XCTestCase {
         app.terminate()
     }
 
-    private func capture(_ name: String) {
-        let path = "/tmp/\(name).png"
-        let image = app.windows.firstMatch.screenshot()
-        let data = image.pngRepresentation
-        try? data.write(to: URL(fileURLWithPath: path))
-        print("📸 Captured: \(path)")
-    }
-
-    private func tapTab(_ label: String) {
-        let button = app.buttons[label]
-        button.tap()
-        Thread.sleep(forTimeInterval: 1.5)
-        print("✓ Tapped tab: \(label)")
-    }
-
     func testAllTabs() {
         print("=== iPad Pro 13-inch (M4) - Capturing screenshots ===")
         
         // Tab 1: Pocket
-        capture("ipad_tab1_pocket")
+        captureScreenshot(in: app, name: "ipad_tab1_pocket")
         
         // Tab 2: Habits
-        tapTab("Habits")
-        capture("ipad_tab2_habits")
+        tapTabButton(in: app, label: "Habits")
+        captureScreenshot(in: app, name: "ipad_tab2_habits")
         
         // Tab 3: Coach
-        tapTab("Coach")
-        capture("ipad_tab3_coach")
+        tapTabButton(in: app, label: "Coach")
+        captureScreenshot(in: app, name: "ipad_tab3_coach")
         
         // Tab 4: Collection
-        tapTab("Collection")
-        capture("ipad_tab4_collection")
+        tapTabButton(in: app, label: "Collection")
+        captureScreenshot(in: app, name: "ipad_tab4_collection")
         
         print("=== iPad Pro 13-inch (M4) - All tabs captured ===")
-        Thread.sleep(forTimeInterval: 2.0)
     }
 }
 
@@ -139,18 +133,9 @@ final class VitaPocketWatchTests: XCTestCase {
         app.terminate()
     }
 
-    private func capture(_ name: String) {
-        let path = "/tmp/\(name).png"
-        // Watch apps have different UI hierarchy
-        let image = app.windows.firstMatch.screenshot()
-        let data = image.pngRepresentation
-        try? data.write(to: URL(fileURLWithPath: path))
-        print("📸 Captured: \(path)")
-    }
-
     func testMainView() {
         print("=== Apple Watch Ultra 3 - Capturing screenshot ===")
-        capture("watch_tab1_main")
+        captureScreenshot(in: app, name: "watch_tab1_main")
         print("=== Apple Watch Ultra 3 - Captured ===")
     }
 }
