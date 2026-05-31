@@ -49,7 +49,7 @@ struct SmallWidgetView: View {
             HStack {
                 Image(systemName: "heart.fill")
                     .foregroundColor(.red)
-                Text("VitaPocket")
+                Text("VitaMindGo")
                     .font(.caption)
                     .fontWeight(.semibold)
             }
@@ -152,7 +152,7 @@ struct VitaPocketWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             VitaPocketWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("VitaPocket")
+        .configurationDisplayName("VitaMindGo Widget")
         .description("View your health metrics at a glance.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
