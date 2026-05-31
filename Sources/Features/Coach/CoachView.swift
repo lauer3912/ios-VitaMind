@@ -64,16 +64,27 @@ struct CoachView: View {
         userMessage = ""
         isTyping = true
         
-        // Call real AI Coach API via gameState
+        // Convert to ChatMessage format for AIService
+        let history = messages.dropLast().map { ChatMessage(role: $0.isUser ? "user" : "assistant", content: $0.text) }
+        
         Task { @MainActor in
             isTyping = false
-            let response = await gameState.sendMessageToCoach(currentMessage)
-            let aiMsg = CoachMessage(
-                text: response,
-                isUser: false,
-                timestamp: Date()
-            )
-            messages.append(aiMsg)
+            do {
+                let response = try await AIService.shared.sendMessage(currentMessage, history: Array(history))
+                let aiMsg = CoachMessage(
+                    text: response,
+                    isUser: false,
+                    timestamp: Date()
+                )
+                messages.append(aiMsg)
+            } catch {
+                let aiMsg = CoachMessage(
+                    text: "抱歉，AI 服务暂时不可用: \(error.localizedDescription)",
+                    isUser: false,
+                    timestamp: Date()
+                )
+                messages.append(aiMsg)
+            }
         }
     }
 }

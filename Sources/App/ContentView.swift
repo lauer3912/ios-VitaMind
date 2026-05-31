@@ -44,6 +44,14 @@ struct ContentView: View {
                     .tag(3)
                     .accessibilityIdentifier("tab_collection")
                     .accessibilityIdentifier("tab_button_3")
+                
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gearshape.fill")
+                    }
+                    .tag(4)
+                    .accessibilityIdentifier("tab_settings")
+                    .accessibilityIdentifier("tab_button_4")
             }
             .tint(VitaTheme.Colors.primary)
             .tabViewStyle(.automatic)
