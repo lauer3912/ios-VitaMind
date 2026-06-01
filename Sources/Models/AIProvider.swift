@@ -63,7 +63,7 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     
     var baseURL: String {
         switch self {
-        case .minimax: return "https://api.minimax.chat/v1/text/chatcompletion_v2"
+        case .minimax: return "https://api.minimax.io/v1"
         case .openai: return "https://api.openai.com/v1/chat/completions"
         case .anthropic: return "https://api.anthropic.com/v1/messages"
         case .google: return "https://generativelanguage.googleapis.com/v1beta/models"
