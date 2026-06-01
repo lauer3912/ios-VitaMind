@@ -28,9 +28,9 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     var defaultModel: String {
         switch self {
         case .minimax: return "MiniMax-M2.7"
-        case .openai: return "gpt-4o"
-        case .anthropic: return "claude-3-5-sonnet-20240620"
-        case .google: return "gemini-1.5-pro"
+        case .openai: return "gpt-5.5"
+        case .anthropic: return "claude-opus-4.8"
+        case .google: return "gemini-3.5-flash"
         case .deepseek: return "deepseek-chat"
         case .xai: return "grok-2"
         }
@@ -52,11 +52,11 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
         case .minimax:
             return ["MiniMax-M2.7", "MiniMax-M2", "abab6.5s-chat", "abab6.5-chat"]
         case .openai:
-            return ["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
+            return ["gpt-5.5", "gpt-5.4", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"]
         case .anthropic:
-            return ["claude-3-5-sonnet-20240620", "claude-3-opus-20240229", "claude-3-sonnet-20240229"]
+            return ["claude-opus-4.8", "claude-sonnet-4.6", "claude-3-5-sonnet-20240620", "claude-3-opus-20240229"]
         case .google:
-            return ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro"]
+            return ["gemini-3.5-flash", "gemini-3.1-pro", "gemini-1.5-pro", "gemini-1.5-flash"]
         case .deepseek:
             return ["deepseek-chat", "deepseek-coder"]
         case .xai:
@@ -88,8 +88,8 @@ struct ChatMessage: Codable, Identifiable {
 final class AIService: ObservableObject {
     static let shared = AIService()
     
-    @Published var currentProvider: AIProviderType = .openai
-    @Published var selectedModel: String = "gpt-4o"
+    @Published var currentProvider: AIProviderType = .anthropic
+    @Published var selectedModel: String = "claude-opus-4.8"
     @Published var apiKey: String = ""
     @Published var isConfigured: Bool = false
     

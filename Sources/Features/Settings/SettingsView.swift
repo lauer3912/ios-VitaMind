@@ -5,7 +5,7 @@ struct SettingsView: View {
     @StateObject private var aiService = AIService.shared
     
     @State private var selectedProvider: AIProviderType = .minimax
-    @State private var selectedModel: String = "gpt-4o"
+    @State private var selectedModel: String = "claude-opus-4.8"
     @State private var apiKey: String = ""
     @State private var showingProviderPicker = false
     @State private var showingModelPicker = false
