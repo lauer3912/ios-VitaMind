@@ -26,6 +26,7 @@
 		BE363C30F90F170597BB9590 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F805C3A305BDFF174640A59 /* CollectionView.swift */; };
 		C153FAAC279E0E604596DD43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F17D2D78B3CAA28102B7415D /* Assets.xcassets */; };
 		CCABF80785B5B7FDD06DEC14 /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C9F36B735FBAB8532E178 /* AIProvider.swift */; };
+		AAAA22221111111111111111 /* AppIconLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA11111111111111111111 /* AppIconLoader.swift */; };
 		D65061C74DBB8BB1880C1E3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A331D2060114415CA40ACC2 /* Assets.xcassets */; };
 		E29098960EB0E455415CF226 /* VitaPocketWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 610E7A9A7E2B0CA385D8C1B5 /* VitaPocketWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E7AAE3977F26D92C4C792062 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1738A25727F41FC8F32C65DE /* HomeView.swift */; };
@@ -92,6 +93,7 @@
 		803193DF6D494576F0FCD5D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		877291E7F34E69753721E9CF /* VitaPocketUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaPocketUITests.swift; sourceTree = "<group>"; };
 		955C9F36B735FBAB8532E178 /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIProvider.swift; sourceTree = "<group>"; };
+		AAAA11111111111111111111 /* AppIconLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconLoader.swift; sourceTree = "<group>"; };
 		B1000013A36058E82FA470B5 /* VitaPocketUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitaPocketUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11E1796DC3953E4269EF006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C81126468E4A26AA1FE5BFF5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				955C9F36B735FBAB8532E178 /* AIProvider.swift */,
+				AAAA11111111111111111111 /* AppIconLoader.swift */,
 				2EE9DC6FBFA47D21A75A0709 /* CardModels.swift */,
 			);
 			path = Models;
@@ -452,6 +455,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCABF80785B5B7FDD06DEC14 /* AIProvider.swift in Sources */,
+				AAAA22221111111111111111 /* AppIconLoader.swift in Sources */,
 				7F9C26690085D539E4D3C504 /* CardModels.swift in Sources */,
 				519394011C156B5CC73A9DE7 /* CoachView.swift in Sources */,
 				BE363C30F90F170597BB9590 /* CollectionView.swift in Sources */,

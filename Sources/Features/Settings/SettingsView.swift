@@ -2,16 +2,12 @@ import SwiftUI
 
 struct AppIconView: View {
     var body: some View {
-        // Load AppIcon from the app bundle's asset catalog
-        // The app icon image is stored as AppIcon.appiconset/Icon-1024@1x.png (1024x1024)
-        // Use direct file path so it works in both simulator and device
-        if let uiImage = loadAppIconImage() {
+        if let uiImage = AppIconLoader.shared.iconImage {
             Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 20))
         } else {
-            // Fallback to gradient placeholder
             ZStack {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(LinearGradient(
@@ -26,46 +22,6 @@ struct AppIconView: View {
             }
         }
     }
-
-    private func loadAppIconImage() -> UIImage? {
-        // Try the asset catalog first
-        if let img = UIImage(named: "AppIcon") {
-            return img
-        }
-        // Try loading the PNG file directly from bundle
-        if let bundlePath = Bundle.main.resourcePath {
-            let iconPath = (bundlePath as NSString).appendingPathComponent("AppIcon.appiconset/Icon-1024@1x.png")
-            if let img = UIImage(contentsOfFile: iconPath) {
-                return img
-            }
-        }
-        // Try alternate paths
-        let possiblePaths = [
-            Bundle.main.path(forResource: "Icon-1024@1x", ofType: "png", inDirectory: "AppIcon.appiconset"),
-            Bundle.main.path(forResource: "Icon-1024@1x", ofType: "png")
-        ]
-        for path in possiblePaths {
-            if let p = path, let img = UIImage(contentsOfFile: p) {
-                return img
-            }
-        }
-        return nil
-    }
-}
-
-struct IconFromBundleView: View {
-    var body: some View {
-        if let uiImage = UIImage(named: "AppIcon") {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-        } else {
-            Image(systemName: "heart.circle.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.blue)
-        }
-    }
 }
 
 struct SettingsView: View {
@@ -75,7 +31,6 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                // Section 1: System Pre-configured AI (read-only)
                 Section {
                     HStack {
                         Image(systemName: "lock.shield.fill")
@@ -106,12 +61,35 @@ struct SettingsView: View {
                     Text("Built-in AI service, ready to use")
                 }
 
-                // Section 2: Custom AI Providers
                 Section {
+                    HStack {
+                        Text("Active: ")
+                            .foregroundColor(.secondary)
+                        Text(AIService.shared.currentProvider.displayName)
+                            .foregroundColor(AIService.shared.currentProvider == .minimaxCn ? .green : .blue)
+                            .fontWeight(.medium)
+                    }
+                    .font(.subheadline)
+
                     ForEach(customProviders, id: \.self) { provider in
-                        NavigationLink {
-                            CustomProviderConfigView(provider: provider)
-                        } label: {
+                        if isProviderActive(provider) {
+                            HStack {
+                                Image(systemName: provider.iconName)
+                                    .frame(width: 30)
+                                    .foregroundColor(.green)
+                                VStack(alignment: .leading) {
+                                    Text(provider.displayName)
+                                        .foregroundColor(.primary)
+                                    Text("Active")
+                                        .font(.caption)
+                                        .foregroundColor(.green)
+                                }
+                                Spacer()
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }
+                            .padding(.vertical, 4)
+                        } else if isProviderConfigured(provider) {
                             HStack {
                                 Image(systemName: provider.iconName)
                                     .frame(width: 30)
@@ -119,31 +97,51 @@ struct SettingsView: View {
                                 VStack(alignment: .leading) {
                                     Text(provider.displayName)
                                         .foregroundColor(.primary)
-                                    if isProviderActive(provider) {
-                                        Text("Active")
-                                            .font(.caption)
-                                            .foregroundColor(.green)
-                                    } else {
+                                    Text("Configured — tap to switch")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Button {
+                                    AIService.shared.switchProvider(provider)
+                                } label: {
+                                    Text("Use")
+                                        .font(.caption)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 4)
+                                        .background(Color.blue)
+                                        .cornerRadius(12)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        } else {
+                            NavigationLink {
+                                CustomProviderConfigView(provider: provider)
+                            } label: {
+                                HStack {
+                                    Image(systemName: provider.iconName)
+                                        .frame(width: 30)
+                                        .foregroundColor(.blue)
+                                    VStack(alignment: .leading) {
+                                        Text(provider.displayName)
+                                            .foregroundColor(.primary)
                                         Text("Tap to configure")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
-                                }
-                                Spacer()
-                                if isProviderActive(provider) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.green)
+                                    Spacer()
                                 }
                             }
+                            .padding(.vertical, 4)
                         }
                     }
                 } header: {
                     Text("Custom AI Providers")
                 } footer: {
-                    Text("10 AI providers available. Configure your own or activate a provider you've already set up.")
+                    Text("Swipe right on a configured provider for quick switch, or tap to edit settings.")
                 }
 
-                // App Info Section
                 Section {
                     HStack {
                         Text("App Version")
@@ -183,6 +181,21 @@ struct SettingsView: View {
     private func isProviderActive(_ provider: AIProviderType) -> Bool {
         return AIService.shared.currentProvider == provider
     }
+
+    private func isProviderConfigured(_ provider: AIProviderType) -> Bool {
+        // Check if this provider has been configured with an API key
+        // For now, check if it has a saved config with non-empty key
+        let defaults = UserDefaults.standard
+        if let data = defaults.data(forKey: "ai_service_config"),
+           let config = try? JSONDecoder().decode([String: String].self, from: data),
+           let savedProvider = config["provider"],
+           savedProvider == provider.rawValue,
+           let apiKey = config["apiKey"],
+           !apiKey.isEmpty {
+            return true
+        }
+        return false
+    }
 }
 
 // MARK: - Custom Provider Configuration
@@ -201,7 +214,6 @@ struct CustomProviderConfigView: View {
 
     var body: some View {
         Form {
-            // Active Status
             if isActive {
                 Section {
                     HStack {
@@ -215,7 +227,6 @@ struct CustomProviderConfigView: View {
                 }
             }
 
-            // Base URL
             Section {
                 HStack {
                     TextField("Base URL", text: $baseURL)
@@ -237,7 +248,6 @@ struct CustomProviderConfigView: View {
                 Text("Default: \(provider.baseURL)")
             }
 
-            // API Key
             Section {
                 SecureField("API Key *", text: $apiKey)
                     .autocapitalization(.none)
@@ -248,7 +258,6 @@ struct CustomProviderConfigView: View {
                 Text("Required — get your API key from \(provider.displayName) dashboard")
             }
 
-            // Model
             Section {
                 if isUsingCustomModel {
                     TextField("Custom model name", text: $customModelInput)
@@ -262,11 +271,11 @@ struct CustomProviderConfigView: View {
                     }
                     .pickerStyle(.menu)
                 }
-                
+
                 Toggle(isUsingCustomModel ? "Custom Model" : "Use Custom Model", isOn: $isUsingCustomModel)
                     .onChange(of: isUsingCustomModel) { _, newValue in
                         if newValue {
-                            customModelInput = selectedModel.contains("/") 
+                            customModelInput = selectedModel.contains("/")
                                 ? String(selectedModel.split(separator: "/").last ?? "")
                                 : selectedModel
                         } else {
@@ -279,7 +288,6 @@ struct CustomProviderConfigView: View {
                 Text("Toggle to enter a custom model name, or select from the list")
             }
 
-            // Test Result
             if let result = testResult {
                 Section {
                     HStack {
@@ -297,7 +305,6 @@ struct CustomProviderConfigView: View {
                 }
             }
 
-            // Actions
             Section {
                 if isTesting {
                     HStack {
@@ -311,7 +318,7 @@ struct CustomProviderConfigView: View {
                     }
                     .disabled(baseURL.isEmpty || apiKey.isEmpty)
                 }
-                
+
                 if isActive {
                     Button("Switch to This Provider") {
                         AIService.shared.switchProvider(provider)
@@ -335,7 +342,7 @@ struct CustomProviderConfigView: View {
         isTesting = true
         testResult = nil
 
-        let finalModel = isUsingCustomModel 
+        let finalModel = isUsingCustomModel
             ? (provider.rawValue + "/" + customModelInput)
             : selectedModel
 
@@ -374,14 +381,14 @@ struct AboutView: View {
                 VStack(spacing: 16) {
                     AppIconView()
                         .frame(width: 100, height: 100)
-                    
+
                     Text("VitaMindGo")
                         .font(.title)
                         .fontWeight(.bold)
-                    
+
                     Text("Version 3.0.0")
                         .foregroundColor(.secondary)
-                    
+
                     Text("Your AI Health Companion")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
