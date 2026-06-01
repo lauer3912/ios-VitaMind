@@ -148,26 +148,65 @@ struct CoachMessageBubble: View {
     let index: Int
     
     var body: some View {
-        HStack {
-            if message.isUser { Spacer() }
+        HStack(alignment: .bottom, spacing: 8) {
+            if !message.isUser {
+                // AI Avatar
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(
+                            colors: [VitaTheme.Colors.primary, VitaTheme.Colors.secondary],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                        .frame(width: 32, height: 32)
+                    Image(systemName: "brain.head.profile")
+                        .font(.system(size: 14))
+                        .foregroundColor(.white)
+                }
+            } else {
+                Spacer()
+            }
             
             VStack(alignment: message.isUser ? .trailing : .leading, spacing: 4) {
-                Text(message.text)
-                    .font(VitaTheme.Fonts.body)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(
-                        RoundedRectangle(cornerRadius: VitaTheme.Radius.lg)
-                            .fill(message.isUser ? VitaTheme.Colors.primary : VitaTheme.Colors.surface)
-                    )
+                // Bubble with tail indicator
+                ZStack(alignment: message.isUser ? .bottomTrailing : .bottomLeading) {
+                    Text(message.text)
+                        .font(VitaTheme.Fonts.body)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(
+                            ChatBubbleShape(isUser: message.isUser)
+                                .fill(message.isUser ? VitaTheme.Colors.primary : VitaTheme.Colors.surface)
+                        )
+                    
+                    // Tail triangle
+                    if !message.isUser {
+                        Triangle()
+                            .fill(VitaTheme.Colors.surface)
+                            .frame(width: 12, height: 8)
+                            .offset(x: -16, y: 4)
+                    }
+                }
                 
                 Text(formatTime(message.timestamp))
                     .font(VitaTheme.Fonts.caption)
-                    .foregroundColor(.white.opacity(0.4))
+                    .foregroundColor(.white.opacity(0.5))
             }
             
-            if !message.isUser { Spacer() }
+            if message.isUser {
+                // User Avatar
+                ZStack {
+                    Circle()
+                        .fill(VitaTheme.Colors.accent.opacity(0.8))
+                        .frame(width: 32, height: 32)
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(.white)
+                }
+            } else {
+                Spacer()
+            }
         }
         .accessibilityIdentifier("coach_message_\(index)")
     }
@@ -179,36 +218,105 @@ struct CoachMessageBubble: View {
     }
 }
 
+// MARK: - Chat Bubble Shape (rounded with tail)
+
+struct ChatBubbleShape: Shape {
+    let isUser: Bool
+    
+    func path(in rect: CGRect) -> Path {
+        let radius: CGFloat = 18
+        let tailSize: CGFloat = 8
+        
+        var path = Path()
+        
+        if isUser {
+            // User bubble: tail on right side
+            path.move(to: CGPoint(x: rect.minX + radius, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX - radius - tailSize, y: rect.minY))
+            path.addQuadCurve(to: CGPoint(x: rect.maxX - tailSize, y: rect.minY + radius), control: CGPoint(x: rect.maxX - tailSize, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX - tailSize, y: rect.maxY - radius))
+            path.addQuadCurve(to: CGPoint(x: rect.maxX - radius - tailSize, y: rect.maxY), control: CGPoint(x: rect.maxX - tailSize, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX + radius, y: rect.maxY))
+            path.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY - radius), control: CGPoint(x: rect.minX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + radius))
+            path.addQuadCurve(to: CGPoint(x: rect.minX + radius, y: rect.minY), control: CGPoint(x: rect.minX, y: rect.minY))
+        } else {
+            // AI bubble: tail on left side
+            path.move(to: CGPoint(x: rect.minX + radius + tailSize, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX - radius, y: rect.minY))
+            path.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.minY + radius), control: CGPoint(x: rect.maxX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - radius))
+            path.addQuadCurve(to: CGPoint(x: rect.maxX - radius, y: rect.maxY), control: CGPoint(x: rect.maxX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX + radius + tailSize, y: rect.maxY))
+            path.addQuadCurve(to: CGPoint(x: rect.minX + tailSize, y: rect.maxY - radius), control: CGPoint(x: rect.minX + tailSize, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX + tailSize, y: rect.minY + radius))
+            path.addQuadCurve(to: CGPoint(x: rect.minX + radius + tailSize, y: rect.minY), control: CGPoint(x: rect.minX + tailSize, y: rect.minY))
+        }
+        
+        path.closeSubpath()
+        return path
+    }
+}
+
+// Triangle shape for bubble tail
+struct Triangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Typing Indicator (improved)
+
 struct TypingIndicatorView: View {
-    @State private var dotOffset: CGFloat = 0
+    @State private var animating = false
     
     var body: some View {
-        HStack {
+        HStack(alignment: .bottom, spacing: 8) {
+            // AI Avatar
+            ZStack {
+                Circle()
+                    .fill(LinearGradient(
+                        colors: [VitaTheme.Colors.primary, VitaTheme.Colors.secondary],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
+                    .frame(width: 32, height: 32)
+                Image(systemName: "brain.head.profile")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white)
+            }
+            
             VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 4) {
+                HStack(spacing: 5) {
                     ForEach(0..<3, id: \.self) { i in
                         Circle()
-                            .fill(VitaTheme.Colors.primary)
+                            .fill(VitaTheme.Colors.primary.opacity(0.7))
                             .frame(width: 8, height: 8)
-                            .offset(y: dotOffset)
+                            .scaleEffect(animating ? 1.0 : 0.5)
                             .animation(
-                                .easeInOut(duration: 0.4)
+                                .easeInOut(duration: 0.6)
                                 .repeatForever(autoreverses: true)
-                                .delay(Double(i) * 0.15),
-                                value: dotOffset
+                                .delay(Double(i) * 0.2),
+                                value: animating
                             )
                     }
                 }
                 .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+                .padding(.vertical, 14)
                 .background(
-                    RoundedRectangle(cornerRadius: VitaTheme.Radius.lg)
+                    ChatBubbleShape(isUser: false)
                         .fill(VitaTheme.Colors.surface)
                 )
             }
+            
             Spacer()
         }
-        .onAppear { dotOffset = -5 }
+        .onAppear { animating = true }
     }
 }
 
