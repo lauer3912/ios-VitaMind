@@ -1,5 +1,40 @@
 import SwiftUI
 
+struct AppIconView: View {
+    var body: some View {
+        // Use the explicit 1024x1024 icon from the asset catalog
+        Image("AppIcon")
+            .resizable()
+            .scaledToFit()
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+}
+
+struct IconFromBundleView: View {
+    var body: some View {
+        // Try loading AppIcon from Assets.xcassets
+        if let image = UIImage(named: "AppIcon") {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+        } else {
+            // Fallback: try the 1024 app store icon directly
+            if let image = UIImage(named: "AppIcon/Icon-1024@1x") {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+            } else {
+                // Last resort: system heart icon
+                Image(systemName: "heart.circle.fill")
+                    .font(.system(size: 80))
+                    .foregroundColor(.blue)
+            }
+        }
+    }
+}
+
 struct SettingsView: View {
     @EnvironmentObject var gameState: GameState
     @StateObject private var aiService = AIService.shared
@@ -24,7 +59,7 @@ struct SettingsView: View {
                                     .foregroundColor(.green)
                             } else {
                                 Button("Use Default") {
-                                    aiService.resetToDefaultProvider()
+                                    AIService.shared.resetToDefaultProvider()
                                 }
                                 .font(.caption)
                                 .foregroundColor(.blue)
@@ -104,7 +139,6 @@ struct SettingsView: View {
         }
     }
 
-    // Custom providers: all except minimaxCn (minimaxGlobal + other 9)
     private var customProviders: [AIProviderType] {
         AIProviderType.allCases.filter { $0 != .minimaxCn }
     }
@@ -276,10 +310,6 @@ struct CustomProviderConfigView: View {
 
         Task {
             do {
-                let tempProvider = AIService.shared.currentProvider
-                let tempModel = AIService.shared.selectedModel
-                let tempKey = AIService.shared.apiKey
-
                 AIService.shared.configureCustomProvider(
                     provider,
                     baseURL: baseURL.isEmpty ? provider.baseURL : baseURL,
@@ -311,7 +341,7 @@ struct AboutView: View {
         List {
             Section {
                 VStack(spacing: 16) {
-                    // Try to load app icon from Asset Catalog
+                    // App icon from asset catalog
                     AppIconView()
                         .frame(width: 100, height: 100)
                     
@@ -344,44 +374,6 @@ struct AboutView: View {
         }
         .navigationTitle("About")
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-// MARK: - App Icon View (cross-platform asset loading)
-
-struct AppIconView: View {
-    var body: some View {
-        if let uiImage = UIImage(named: "AppIcon") {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-        } else if let uiImage = UIImage(named: "AppIcon60@3x") {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-        } else {
-            // Fallback: show app's actual icon from main bundle
-            IconFromBundleView()
-        }
-    }
-}
-
-struct IconFromBundleView: View {
-    var body: some View {
-        if let icon = Bundle.main.infoDictionary?["CFBundleIconFiles"] as? [String],
-           let firstIcon = icon.first,
-           let uiImage = UIImage(named: firstIcon) {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-        } else {
-            Image(systemName: "heart.circle.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.blue)
-        }
     }
 }
 
