@@ -36,7 +36,7 @@ struct SettingsView: View {
                 
                 // Custom AI Providers Section
                 Section {
-                    ForEach(AIProviderType.allCases.filter { $0 != .minimax }, id: \.self) { provider in
+                    ForEach(AIProviderType.allCases, id: \.self) { provider in
                         NavigationLink {
                             CustomProviderConfigView(provider: provider)
                         } label: {
@@ -47,17 +47,24 @@ struct SettingsView: View {
                                 VStack(alignment: .leading) {
                                     Text(provider.displayName)
                                         .foregroundColor(.primary)
-                                    Text("Tap to configure")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
+                                    if provider == .minimax {
+                                        Text("Pre-configured")
+                                            .font(.caption)
+                                            .foregroundColor(.green)
+                                    } else {
+                                        Text("Tap to configure")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
+                                Spacer()
                             }
                         }
                     }
                 } header: {
                     Text("Custom AI Providers")
                 } footer: {
-                    Text("9 additional AI providers available. Select one to configure with your own API Key")
+                    Text("10 AI providers available. MiniMax is pre-configured.")
                 }
                 
                 // App Info Section
@@ -119,14 +126,26 @@ struct CustomProviderConfigView: View {
                         .foregroundColor(.secondary)
                 }
                 
+                if provider == .minimax {
+                    HStack {
+                        Text("Status")
+                        Spacer()
+                        Text("Pre-configured")
+                            .foregroundColor(.green)
+                            .fontWeight(.medium)
+                    }
+                }
+                
                 TextField("Base URL", text: $baseURL)
                     .autocapitalization(.none)
                     .autocorrectionDisabled()
                     .keyboardType(.URL)
+                    .disabled(provider == .minimax)
                 
                 TextField("API Key", text: $apiKey)
                     .autocapitalization(.none)
                     .autocorrectionDisabled()
+                    .disabled(provider == .minimax)
                 
                 Picker("Model", selection: $selectedModel) {
                     ForEach(provider.supportedModels, id: \.self) { model in
@@ -136,7 +155,11 @@ struct CustomProviderConfigView: View {
             } header: {
                 Text("Configuration")
             } footer: {
-                Text("Enter the base URL and API Key for \(provider.displayName)")
+                if provider == .minimax {
+                    Text("MiniMax global API is pre-configured with your API Key")
+                } else {
+                    Text("Enter the base URL and API Key for \(provider.displayName)")
+                }
             }
             
             Section {
@@ -154,23 +177,36 @@ struct CustomProviderConfigView: View {
                         }
                     }
                 }
-                .disabled(baseURL.isEmpty || apiKey.isEmpty)
+                .disabled(provider == .minimax)
                 
-                Button("Save") {
-                    AIService.shared.configureCustomProvider(
-                        provider,
-                        baseURL: baseURL,
-                        apiKey: apiKey,
-                        model: selectedModel
-                    )
-                    dismiss()
+                Button("Test Connection") {
+                    testConnection()
                 }
-                .disabled(baseURL.isEmpty || apiKey.isEmpty)
+                .disabled(provider == .minimax || baseURL.isEmpty || apiKey.isEmpty)
+                
+                if provider != .minimax {
+                    Button("Save") {
+                        AIService.shared.configureCustomProvider(
+                            provider,
+                            baseURL: baseURL,
+                            apiKey: apiKey,
+                            model: selectedModel
+                        )
+                        dismiss()
+                    }
+                    .disabled(baseURL.isEmpty || apiKey.isEmpty)
+                }
             }
         }
-        .navigationTitle("Configure \(provider.displayName)")
+        .navigationTitle(provider == .minimax ? "MiniMax" : "Configure \(provider.displayName)")
         .onAppear {
             selectedModel = provider.defaultModel
+            if provider == .minimax {
+                baseURL = provider.baseURL
+                apiKey = AIService.shared.apiKey
+                isTesting = false
+                testResult = nil
+            }
         }
     }
     
