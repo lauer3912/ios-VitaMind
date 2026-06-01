@@ -48,7 +48,7 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     
     var defaultModel: String {
         switch self {
-        case .minimax: return "minimax/MiniMax-M2.7"
+        case .minimax: return "minimax/MiniMax-M3"
         case .openai: return "openai/gpt-5.5"
         case .anthropic: return "anthropic/claude-opus-4-6"
         case .google: return "google/gemini-3.1-pro-preview"
@@ -79,7 +79,7 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     var supportedModels: [String] {
         switch self {
         case .minimax:
-            return ["minimax/MiniMax-M2.7", "minimax/MiniMax-M2.7-highspeed", "minimax/MiniMax-M2.5", "minimax/MiniMax-M2.5-highspeed"]
+            return ["minimax/MiniMax-M3", "minimax/MiniMax-M2.7", "minimax/MiniMax-M2.7-highspeed", "minimax/MiniMax-M2.5", "minimax/MiniMax-M2.5-highspeed"]
         case .openai:
             return ["openai/gpt-5.5", "openai/gpt-5.4", "openai/gpt-4o", "openai/gpt-4-turbo", "openai/gpt-3.5-turbo"]
         case .anthropic:
@@ -126,7 +126,7 @@ final class AIService: ObservableObject {
     static let shared = AIService()
     
     @Published var currentProvider: AIProviderType = .minimax
-    @Published var selectedModel: String = "minimax/MiniMax-M2.7"
+    @Published var selectedModel: String = "minimax/MiniMax-M3"
     @Published var apiKey: String = "sk-cp-JrsXMfjYj9mexu5NAr9Eevedk7IBFoCZFi4azaPEColz-bU0LH0NPA-Z-gxMlM505CKP1Cq-zaAP0OF2bQ0k6y44J1TP0XNodYCxY9oiQAmeGb0RPIivl6A"
     @Published var isConfigured: Bool = true
     
