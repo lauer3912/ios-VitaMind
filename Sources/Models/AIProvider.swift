@@ -3,7 +3,8 @@ import Foundation
 // MARK: - AI Provider Configuration
 
 enum AIProviderType: String, CaseIterable, Codable, Identifiable {
-    case minimax = "minimax"
+    case minimaxCn = "minimax-cn"
+    case minimaxGlobal = "minimax-global"
     case openai = "openai"
     case anthropic = "anthropic"
     case google = "google"
@@ -18,7 +19,8 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     
     var displayName: String {
         switch self {
-        case .minimax: return "MiniMax"
+        case .minimaxCn: return "MiniMax-CN"
+        case .minimaxGlobal: return "MiniMax-Global"
         case .openai: return "OpenAI"
         case .anthropic: return "Anthropic"
         case .google: return "Google"
@@ -33,7 +35,8 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     
     var iconName: String {
         switch self {
-        case .minimax: return "brain"
+        case .minimaxCn: return "lock.shield.fill"
+        case .minimaxGlobal: return "globe"
         case .openai: return "sparkles"
         case .anthropic: return "person.fill"
         case .google: return "g.circle"
@@ -48,7 +51,8 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     
     var defaultModel: String {
         switch self {
-        case .minimax: return "minimax/MiniMax-M3"
+        case .minimaxCn: return "minimax/MiniMax-M3"
+        case .minimaxGlobal: return "minimax/MiniMax-M3"
         case .openai: return "openai/gpt-5.5"
         case .anthropic: return "anthropic/claude-opus-4-6"
         case .google: return "google/gemini-3.1-pro-preview"
@@ -63,7 +67,8 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     
     var baseURL: String {
         switch self {
-        case .minimax: return "https://api.minimaxi.com/v1"
+        case .minimaxCn: return "https://api.minimaxi.com/v1"
+        case .minimaxGlobal: return "https://api.minimax.io/v1"
         case .openai: return "https://api.openai.com/v1/chat/completions"
         case .anthropic: return "https://api.anthropic.com/v1/messages"
         case .google: return "https://generativelanguage.googleapis.com/v1beta/models"
@@ -78,7 +83,7 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     
     var supportedModels: [String] {
         switch self {
-        case .minimax:
+        case .minimaxCn, .minimaxGlobal:
             return ["minimax/MiniMax-M3", "minimax/MiniMax-M2.7", "minimax/MiniMax-M2.7-highspeed", "minimax/MiniMax-M2.5", "minimax/MiniMax-M2.5-highspeed"]
         case .openai:
             return ["openai/gpt-5.5", "openai/gpt-5.4", "openai/gpt-4o", "openai/gpt-4-turbo", "openai/gpt-3.5-turbo"]
@@ -125,7 +130,7 @@ struct ChatMessage: Codable, Identifiable {
 final class AIService: ObservableObject {
     static let shared = AIService()
     
-    @Published var currentProvider: AIProviderType = .minimax
+    @Published var currentProvider: AIProviderType = .minimaxCn
     @Published var selectedModel: String = "minimax/MiniMax-M3"
     @Published var apiKey: String = "sk-cp-JrsXMfjYj9mexu5NAr9Eevedk7IBFoCZFi4azaPEColz-bU0LH0NPA-Z-gxMlM505CKP1Cq-zaAP0OF2bQ0k6y44J1TP0XNodYCxY9oiQAmeGb0RPIivl6A"
     @Published var isConfigured: Bool = true
@@ -171,7 +176,7 @@ final class AIService: ObservableObject {
         }
         
         switch currentProvider {
-        case .minimax:
+        case .minimaxCn, .minimaxGlobal:
             return try await sendMiniMaxMessage(text, history: history)
         case .openai:
             return try await sendOpenAIMessage(text, history: history)
@@ -217,7 +222,7 @@ final class AIService: ObservableObject {
         )
         
         return try await makeJSONRequest(
-            endpoint: AIProviderType.minimax.baseURL,
+            endpoint: AIProviderType.minimaxCn.baseURL,
             method: "POST",
             headers: ["Content-Type": "application/json", "Authorization": "Bearer \(apiKey)"],
             body: requestBody,

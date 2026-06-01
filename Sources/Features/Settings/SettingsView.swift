@@ -7,39 +7,33 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                // AI Service Status (read-only, pre-configured)
+                // Section 1: System Pre-configured AI (read-only)
                 Section {
                     HStack {
-                        Label("AI Service", systemImage: "brain.fill")
-                            .foregroundColor(.primary)
+                        Image(systemName: "lock.shield.fill")
+                            .frame(width: 30)
+                            .foregroundColor(.green)
+                        VStack(alignment: .leading) {
+                            Text("MiniMax-CN")
+                                .foregroundColor(.primary)
+                            Text("Pre-configured")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                        }
                         Spacer()
                         Text("Ready")
                             .foregroundColor(.green)
                             .fontWeight(.medium)
                     }
-
-                    HStack {
-                        Text("Provider")
-                        Spacer()
-                        Text("MiniMax")
-                            .foregroundColor(.secondary)
-                    }
-
-                    HStack {
-                        Text("Model")
-                        Spacer()
-                        Text("MiniMax-M3")
-                            .foregroundColor(.secondary)
-                    }
                 } header: {
-                    Text("AI Assistant")
+                    Text("System Pre-configured")
                 } footer: {
-                    Text("AI service is pre-configured and ready to use")
+                    Text("Default AI service, cannot be modified")
                 }
 
-                // Custom AI Providers Section
+                // Section 2: Custom AI Providers
                 Section {
-                    ForEach(AIProviderType.allCases, id: \.self) { provider in
+                    ForEach(customProviders, id: \.self) { provider in
                         NavigationLink {
                             CustomProviderConfigView(provider: provider)
                         } label: {
@@ -50,18 +44,12 @@ struct SettingsView: View {
                                 VStack(alignment: .leading) {
                                     Text(provider.displayName)
                                         .foregroundColor(.primary)
-                                    if provider == .minimax {
-                                        Text("Pre-configured")
-                                            .font(.caption)
-                                            .foregroundColor(.green)
-                                    } else {
-                                        Text("Tap to configure")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
+                                    Text("Tap to configure")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                 }
                                 Spacer()
-                                if isProviderActive(provider) && provider != .minimax {
+                                if isProviderActive(provider) {
                                     Text("Active")
                                         .font(.caption)
                                         .foregroundColor(.blue)
@@ -72,7 +60,7 @@ struct SettingsView: View {
                 } header: {
                     Text("Custom AI Providers")
                 } footer: {
-                    Text("10 AI providers available. MiniMax is pre-configured.")
+                    Text("10 AI providers available. Tap to configure with your own API Key")
                 }
 
                 // App Info Section
@@ -104,6 +92,11 @@ struct SettingsView: View {
         }
     }
 
+    // Custom providers: minimaxGlobal + other 9 (excluding minimaxCn)
+    private var customProviders: [AIProviderType] {
+        AIProviderType.allCases.filter { $0 != .minimaxCn }
+    }
+
     private func isProviderActive(_ provider: AIProviderType) -> Bool {
         return AIService.shared.currentProvider == provider
     }
@@ -132,96 +125,81 @@ struct CustomProviderConfigView: View {
                         .foregroundColor(.secondary)
                 }
 
-                if provider == .minimax {
-                    HStack {
-                        Text("Status")
-                        Spacer()
-                        Text("Pre-configured")
-                            .foregroundColor(.green)
-                            .fontWeight(.medium)
-                    }
-                }
-
                 if isActive {
                     HStack {
-                        Text("Active")
+                        Text("Status")
                         Spacer()
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.blue)
                     }
                 }
             } header: {
-                Text(provider == .minimax ? "MiniMax" : provider.displayName)
+                Text(provider.displayName)
             }
 
-            // Configuration (disabled for MiniMax)
-            if provider != .minimax {
-                Section {
-                    TextField("Base URL", text: $baseURL)
-                        .autocapitalization(.none)
-                        .autocorrectionDisabled()
-                        .keyboardType(.URL)
-                        .textContentType(.URL)
+            // Configuration
+            Section {
+                TextField("Base URL", text: $baseURL)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+                    .keyboardType(.URL)
+                    .textContentType(.URL)
 
-                    SecureField("API Key", text: $apiKey)
-                        .autocapitalization(.none)
-                        .autocorrectionDisabled()
+                SecureField("API Key", text: $apiKey)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
 
-                    Picker("Model", selection: $selectedModel) {
-                        ForEach(provider.supportedModels, id: \.self) { model in
-                            Text(model).tag(model)
-                        }
+                Picker("Model", selection: $selectedModel) {
+                    ForEach(provider.supportedModels, id: \.self) { model in
+                        Text(model).tag(model)
                     }
-                } header: {
-                    Text("Configuration")
-                } footer: {
-                    Text("Enter your \(provider.displayName) API credentials")
                 }
+            } header: {
+                Text("Configuration")
+            } footer: {
+                Text("Enter your \(provider.displayName) API credentials")
+            }
 
-                // Test Result
-                if let result = testResult {
-                    Section {
-                        HStack {
-                            Text("Result")
-                            Spacer()
-                            if result == "Success" {
-                                Text("Connection successful")
-                                    .foregroundColor(.green)
-                            } else {
-                                Text(result)
-                                    .foregroundColor(.red)
-                                    .lineLimit(2)
-                            }
+            // Test Result
+            if let result = testResult {
+                Section {
+                    HStack {
+                        Text("Result")
+                        Spacer()
+                        if result == "Success" {
+                            Text("Connection successful")
+                                .foregroundColor(.green)
+                        } else {
+                            Text(result)
+                                .foregroundColor(.red)
+                                .lineLimit(2)
                         }
                     }
                 }
+            }
 
-                // Actions
-                Section {
-                    if isTesting {
-                        HStack {
-                            Text("Testing...")
-                            Spacer()
-                            ProgressView()
-                        }
-                    } else {
-                        Button("Test & Save") {
-                            testAndSave()
-                        }
-                        .disabled(baseURL.isEmpty || apiKey.isEmpty)
+            // Actions
+            Section {
+                if isTesting {
+                    HStack {
+                        Text("Testing...")
+                        Spacer()
+                        ProgressView()
                     }
+                } else {
+                    Button("Test & Save") {
+                        testAndSave()
+                    }
+                    .disabled(baseURL.isEmpty || apiKey.isEmpty)
                 }
             }
         }
-        .navigationTitle(provider == .minimax ? "MiniMax" : "Configure \(provider.displayName)")
+        .navigationTitle(provider.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             selectedModel = provider.defaultModel
+            baseURL = provider.baseURL
             isActive = AIService.shared.currentProvider == provider
-            if provider == .minimax {
-                baseURL = provider.baseURL
-                apiKey = AIService.shared.apiKey
-            }
         }
     }
 
@@ -232,7 +210,6 @@ struct CustomProviderConfigView: View {
 
         Task {
             do {
-                // Temporarily switch to this provider to test
                 let previousProvider = AIService.shared.currentProvider
                 let previousModel = AIService.shared.selectedModel
                 let previousKey = AIService.shared.apiKey
@@ -251,133 +228,6 @@ struct CustomProviderConfigView: View {
                     isTesting = false
                     isActive = false
                 }
-            }
-        }
-    }
-}
-
-// MARK: - Provider Picker
-
-struct ProviderPickerView: View {
-    @Binding var selectedProvider: AIProviderType
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            List(AIProviderType.allCases) { provider in
-                Button {
-                    selectedProvider = provider
-                    dismiss()
-                } label: {
-                    HStack {
-                        Image(systemName: provider.iconName)
-                            .frame(width: 30)
-                            .foregroundColor(.blue)
-                        VStack(alignment: .leading) {
-                            Text(provider.displayName)
-                                .foregroundColor(.primary)
-                            Text("\(provider.supportedModels.count) models available")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        if selectedProvider == provider {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Select AI Provider")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Model Picker
-
-struct ModelPickerView: View {
-    let selectedProvider: AIProviderType
-    @Binding var selectedModel: String
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            List(selectedProvider.supportedModels, id: \.self) { model in
-                Button {
-                    selectedModel = model
-                    AIService.shared.selectedModel = model
-                    dismiss()
-                } label: {
-                    HStack {
-                        Text(model)
-                            .foregroundColor(.primary)
-                        Spacer()
-                        if selectedModel == model {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Select Model")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-            }
-        }
-    }
-}
-
-// MARK: - API Key Input
-
-struct ApiKeyInputView: View {
-    @Binding var apiKey: String
-    @Environment(\.dismiss) private var dismiss
-    @State private var inputKey: String = ""
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    SecureField("Enter API Key", text: $inputKey)
-                        .autocapitalization(.none)
-                        .autocorrectionDisabled()
-                } header: {
-                    Text("API Key")
-                } footer: {
-                    Text("Your API Key will be securely stored on your device")
-                }
-
-                Section {
-                    Button("Save") {
-                        apiKey = inputKey
-                        AIService.shared.configure(
-                            provider: AIService.shared.currentProvider,
-                            model: AIService.shared.selectedModel,
-                            apiKey: inputKey
-                        )
-                        dismiss()
-                    }
-                    .disabled(inputKey.isEmpty)
-                }
-            }
-            .navigationTitle("Enter API Key")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-            }
-            .onAppear {
-                inputKey = apiKey
             }
         }
     }
