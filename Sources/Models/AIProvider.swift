@@ -478,13 +478,25 @@ final class AIService: ObservableObject {
               let config = try? JSONDecoder().decode([String: String].self, from: data),
               let providerRaw = config["provider"],
               let provider = AIProviderType(rawValue: providerRaw) else {
+            // No saved config - this is NOT an error, we have default config
+            // Reset to minimaxCn with defaultAPIKey for first launch
+            self.currentProvider = .minimaxCn
+            self.selectedModel = AIProviderType.minimaxCn.defaultModel
+            self.apiKey = defaultAPIKey
+            self.isConfigured = true
             return
         }
         
         self.currentProvider = provider
         self.selectedModel = config["model"] ?? provider.defaultModel
         self.apiKey = config["apiKey"] ?? ""
-        self.isConfigured = !self.apiKey.isEmpty
+        // If using default provider but no API key saved, use the pre-configured key
+        if provider == .minimaxCn && self.apiKey.isEmpty {
+            self.apiKey = defaultAPIKey
+            self.isConfigured = true
+        } else {
+            self.isConfigured = !self.apiKey.isEmpty
+        }
     }
 }
 

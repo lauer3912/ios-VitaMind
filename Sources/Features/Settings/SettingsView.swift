@@ -2,35 +2,37 @@ import SwiftUI
 
 struct AppIconView: View {
     var body: some View {
-        // Use the explicit 1024x1024 icon from the asset catalog
-        Image("AppIcon")
-            .resizable()
-            .scaledToFit()
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+        // Use the system icon as fallback since AppIcon from Assets.xcassets
+        // may not load in all contexts. The actual app icon is defined
+        // in the asset catalog and will appear on the device/home screen.
+        ZStack {
+            RoundedRectangle(cornerRadius: 20)
+                .fill(LinearGradient(
+                    colors: [Color.blue, Color.purple],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ))
+                .frame(width: 100, height: 100)
+            
+            Image(systemName: "heart.fill")
+                .font(.system(size: 50))
+                .foregroundColor(.white)
+        }
+        .accessibilityLabel("VitaMindGo App Icon")
     }
 }
 
 struct IconFromBundleView: View {
     var body: some View {
-        // Try loading AppIcon from Assets.xcassets
-        if let image = UIImage(named: "AppIcon") {
-            Image(uiImage: image)
+        if let uiImage = UIImage(named: "AppIcon") {
+            Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 20))
         } else {
-            // Fallback: try the 1024 app store icon directly
-            if let image = UIImage(named: "AppIcon/Icon-1024@1x") {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-            } else {
-                // Last resort: system heart icon
-                Image(systemName: "heart.circle.fill")
-                    .font(.system(size: 80))
-                    .foregroundColor(.blue)
-            }
+            Image(systemName: "heart.circle.fill")
+                .font(.system(size: 80))
+                .foregroundColor(.blue)
         }
     }
 }
@@ -162,9 +164,9 @@ struct CustomProviderConfigView: View {
     @State private var selectedModel: String = ""
     @State private var customModelInput: String = ""
     @State private var isUsingCustomModel: Bool = false
-    @State private var isTesting = false
+    @State private var isTesting: Bool = false
     @State private var testResult: String?
-    @State private var isActive = false
+    @State private var isActive: Bool = false
 
     var body: some View {
         Form {
@@ -243,9 +245,7 @@ struct CustomProviderConfigView: View {
             } header: {
                 Text("Model")
             } footer: {
-                if !isUsingCustomModel {
-                    Text("Or toggle on to enter a custom model name")
-                }
+                Text("Toggle to enter a custom model name, or select from the list")
             }
 
             // Test Result
@@ -341,7 +341,6 @@ struct AboutView: View {
         List {
             Section {
                 VStack(spacing: 16) {
-                    // App icon from asset catalog
                     AppIconView()
                         .frame(width: 100, height: 100)
                     

@@ -28,6 +28,11 @@
 	<string>VitaMind needs access to your health data to provide personalized health insights and track your wellness progress.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>VitaMind needs permission to save your health data including workouts and mindfulness sessions.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
