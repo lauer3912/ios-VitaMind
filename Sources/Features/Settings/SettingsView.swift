@@ -7,28 +7,22 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                // Section 1: System Pre-configured AI (read-only)
+                // Section 1: System Pre-configured AI (read-only, no provider name)
                 Section {
                     HStack {
                         Image(systemName: "lock.shield.fill")
-                            .frame(width: 30)
+                            .font(.title2)
                             .foregroundColor(.green)
-                        VStack(alignment: .leading) {
-                            Text("MiniMax-CN")
-                                .foregroundColor(.primary)
-                            Text("Pre-configured")
-                                .font(.caption)
-                                .foregroundColor(.green)
-                        }
                         Spacer()
                         Text("Ready")
                             .foregroundColor(.green)
                             .fontWeight(.medium)
                     }
+                    .listRowBackground(Color(.systemBackground))
                 } header: {
                     Text("System Pre-configured")
                 } footer: {
-                    Text("Default AI service, cannot be modified")
+                    Text("Built-in AI service, ready to use")
                 }
 
                 // Section 2: Custom AI Providers
@@ -92,7 +86,7 @@ struct SettingsView: View {
         }
     }
 
-    // Custom providers: minimaxGlobal + other 9 (excluding minimaxCn)
+    // Custom providers: all except minimaxCn (minimaxGlobal + other 9)
     private var customProviders: [AIProviderType] {
         AIProviderType.allCases.filter { $0 != .minimaxCn }
     }
@@ -110,54 +104,92 @@ struct CustomProviderConfigView: View {
     @State private var apiKey: String = ""
     @State private var baseURL: String = ""
     @State private var selectedModel: String = ""
+    @State private var customModelInput: String = ""
+    @State private var isUsingCustomModel: Bool = false
     @State private var isTesting = false
     @State private var testResult: String?
     @State private var isActive = false
 
     var body: some View {
         Form {
-            // Provider Header
-            Section {
-                HStack {
-                    Text("Provider")
-                    Spacer()
-                    Text(provider.displayName)
-                        .foregroundColor(.secondary)
-                }
-
-                if isActive {
+            // Status
+            if isActive {
+                Section {
                     HStack {
                         Text("Status")
                         Spacer()
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.green)
+                        Text("Active")
+                            .foregroundColor(.green)
                     }
                 }
-            } header: {
-                Text(provider.displayName)
             }
 
-            // Configuration
+            // Base URL
             Section {
-                TextField("Base URL", text: $baseURL)
-                    .autocapitalization(.none)
-                    .autocorrectionDisabled()
-                    .keyboardType(.URL)
-                    .textContentType(.URL)
-
-                SecureField("API Key", text: $apiKey)
-                    .autocapitalization(.none)
-                    .autocorrectionDisabled()
-
-                Picker("Model", selection: $selectedModel) {
-                    ForEach(provider.supportedModels, id: \.self) { model in
-                        Text(model).tag(model)
+                HStack {
+                    TextField("Base URL", text: $baseURL)
+                        .autocapitalization(.none)
+                        .autocorrectionDisabled()
+                        .keyboardType(.URL)
+                        .textContentType(.URL)
+                    Button {
+                        baseURL = provider.baseURL
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                            .foregroundColor(.blue)
                     }
+                    .buttonStyle(.plain)
                 }
             } header: {
-                Text("Configuration")
+                Text("Base URL *")
             } footer: {
-                Text("Enter your \(provider.displayName) API credentials")
+                Text("Default: \(provider.baseURL)")
+            }
+
+            // API Key
+            Section {
+                SecureField("API Key *", text: $apiKey)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+            } header: {
+                Text("API Key *")
+            } footer: {
+                Text("Required — get your API key from \(provider.displayName) dashboard")
+            }
+
+            // Model
+            Section {
+                if isUsingCustomModel {
+                    TextField("Custom model name", text: $customModelInput)
+                        .autocapitalization(.none)
+                        .autocorrectionDisabled()
+                } else {
+                    Picker("Model", selection: $selectedModel) {
+                        ForEach(provider.supportedModels, id: \.self) { model in
+                            Text(model).tag(model)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                
+                Toggle(isUsingCustomModel ? "Custom Model" : "Use Custom Model", isOn: $isUsingCustomModel)
+                    .onChange(of: isUsingCustomModel) { _, newValue in
+                        if newValue {
+                            customModelInput = selectedModel.contains("/") 
+                                ? String(selectedModel.split(separator: "/").last ?? "")
+                                : selectedModel
+                        } else {
+                            selectedModel = provider.defaultModel
+                        }
+                    }
+            } header: {
+                Text("Model")
+            } footer: {
+                if !isUsingCustomModel {
+                    Text("Or toggle on to enter a custom model name")
+                }
             }
 
             // Test Result
@@ -204,9 +236,13 @@ struct CustomProviderConfigView: View {
     }
 
     private func testAndSave() {
-        guard !baseURL.isEmpty, !apiKey.isEmpty else { return }
+        guard !baseURL.isEmpty || !apiKey.isEmpty else { return }
         isTesting = true
         testResult = nil
+
+        let finalModel = isUsingCustomModel 
+            ? (provider.rawValue + "/" + customModelInput)
+            : selectedModel
 
         Task {
             do {
@@ -214,7 +250,12 @@ struct CustomProviderConfigView: View {
                 let previousModel = AIService.shared.selectedModel
                 let previousKey = AIService.shared.apiKey
 
-                AIService.shared.configureCustomProvider(provider, baseURL: baseURL, apiKey: apiKey, model: selectedModel)
+                AIService.shared.configureCustomProvider(
+                    provider,
+                    baseURL: baseURL.isEmpty ? provider.baseURL : baseURL,
+                    apiKey: apiKey,
+                    model: finalModel
+                )
                 let _ = try await AIService.shared.sendMessage("Hi", history: [])
 
                 await MainActor.run {
@@ -240,17 +281,26 @@ struct AboutView: View {
         List {
             Section {
                 VStack(spacing: 16) {
-                    Image(systemName: "heart.circle.fill")
-                        .font(.system(size: 80))
-                        .foregroundColor(.blue)
-
+                    // Use app's actual icon from Assets
+                    if let appIcon = UIImage(named: "AppIcon") {
+                        Image(uiImage: appIcon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                    } else {
+                        Image(systemName: "heart.circle.fill")
+                            .font(.system(size: 80))
+                            .foregroundColor(.blue)
+                    }
+                    
                     Text("VitaMindGo")
                         .font(.title)
                         .fontWeight(.bold)
-
+                    
                     Text("Version 3.0.0")
                         .foregroundColor(.secondary)
-
+                    
                     Text("Your AI Health Companion")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
