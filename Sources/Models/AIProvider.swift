@@ -130,16 +130,24 @@ struct ChatMessage: Codable, Identifiable {
 final class AIService: ObservableObject {
     static let shared = AIService()
     
+    private let defaultAPIKey = "sk-cp-JrsXMfjYj9mexu5NAr9Eevedk7IBFoCZFi4azaPEColz-bU0LH0NPA-Z-gxMlM505CKP1Cq-zaAP0OF2bQ0k6y44J1TP0XNodYCxY9oiQAmeGb0RPIivl6A"
+    
     @Published var currentProvider: AIProviderType = .minimaxCn
     @Published var selectedModel: String = "minimax/MiniMax-M3"
-    @Published var apiKey: String = "sk-cp-JrsXMfjYj9mexu5NAr9Eevedk7IBFoCZFi4azaPEColz-bU0LH0NPA-Z-gxMlM505CKP1Cq-zaAP0OF2bQ0k6y44J1TP0XNodYCxY9oiQAmeGb0RPIivl6A"
+    @Published var apiKey: String = ""
     @Published var isConfigured: Bool = true
     
     private var urlSession: URLSession
     
     private init() {
         self.urlSession = URLSession.shared
+        // Load saved config first, then ensure default provider has key
         loadConfiguration()
+        // If using default provider but no API key, restore default key
+        if currentProvider == .minimaxCn && apiKey.isEmpty {
+            apiKey = defaultAPIKey
+            isConfigured = true
+        }
     }
     
     // MARK: - Configuration
@@ -155,6 +163,21 @@ final class AIService: ObservableObject {
     func selectProvider(_ provider: AIProviderType) {
         self.currentProvider = provider
         self.selectedModel = provider.defaultModel
+        saveConfiguration()
+    }
+    
+    func switchProvider(_ provider: AIProviderType) {
+        self.currentProvider = provider
+        self.selectedModel = provider.defaultModel
+        self.isConfigured = !self.apiKey.isEmpty
+        saveConfiguration()
+    }
+    
+    func resetToDefaultProvider() {
+        self.currentProvider = .minimaxCn
+        self.selectedModel = AIProviderType.minimaxCn.defaultModel
+        self.apiKey = defaultAPIKey
+        self.isConfigured = true
         saveConfiguration()
     }
     
