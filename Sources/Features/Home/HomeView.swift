@@ -43,13 +43,13 @@ struct TodayMissionSection: View {
             HStack {
                 Text("Today's Missions")
                     .font(VitaTheme.Fonts.title)
-                    .foregroundColor(.white)
-                
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
+
                 Spacer()
-                
+
                 Text("\(gameState.todayHabitsCompleted)/\(gameState.habitCards.count)")
                     .font(VitaTheme.Fonts.caption)
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundColor(VitaTheme.Colors.textSecondary)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(VitaTheme.Colors.primary.opacity(0.2))
@@ -87,7 +87,7 @@ struct MissionCard: View {
             
             Text(habit.name)
                 .font(VitaTheme.Fonts.caption)
-                .foregroundColor(.white)
+                .foregroundColor(VitaTheme.Colors.textPrimary)
                 .lineLimit(1)
         }
         .frame(width: 80)
@@ -114,13 +114,13 @@ struct HealthCardsSection: View {
             HStack {
                 Text("Health Stats")
                     .font(VitaTheme.Fonts.title)
-                    .foregroundColor(.white)
-                
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
+
                 Spacer()
-                
+
                 Text("\(gameState.totalCardsCollected) collected")
                     .font(VitaTheme.Fonts.caption)
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundColor(VitaTheme.Colors.textSecondary)
             }
             .padding(.horizontal)
             
@@ -152,11 +152,11 @@ struct HealthCardDetailView: View {
                 VStack(spacing: 16) {
                     Text(card.name)
                         .font(VitaTheme.Fonts.displayBold)
-                        .foregroundColor(.white)
+                        .foregroundColor(VitaTheme.Colors.textPrimary)
                     
                     Text(card.description)
                         .font(VitaTheme.Fonts.body)
-                        .foregroundColor(.white.opacity(0.7))
+                        .foregroundColor(VitaTheme.Colors.textSecondary)
                         .multilineTextAlignment(.center)
                     
                     // Current stats
@@ -167,7 +167,7 @@ struct HealthCardDetailView: View {
                                 .foregroundColor(VitaTheme.Colors.primary)
                             Text(card.unit)
                                 .font(VitaTheme.Fonts.caption)
-                                .foregroundColor(.white.opacity(0.5))
+                                .foregroundColor(VitaTheme.Colors.textTertiary)
                         }
                     }
                 }
@@ -211,23 +211,23 @@ struct PullCardButton: View {
                     
                     Image(systemName: "star.circle.fill")
                         .font(.system(size: 24))
-                        .foregroundColor(.white)
+                        .foregroundColor(VitaTheme.Colors.textPrimary)
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Daily Pull")
                         .font(VitaTheme.Fonts.titleMedium)
-                        .foregroundColor(.white)
+                        .foregroundColor(VitaTheme.Colors.textPrimary)
                     
                     Text("Try your luck!")
                         .font(VitaTheme.Fonts.caption)
-                        .foregroundColor(.white.opacity(0.7))
+                        .foregroundColor(VitaTheme.Colors.textSecondary)
                 }
                 
                 Spacer()
                 
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.white.opacity(0.5))
+                    .foregroundColor(VitaTheme.Colors.textTertiary)
             }
             .padding()
             .background(

@@ -57,7 +57,7 @@ struct StreakSummaryView: View {
             
             Divider()
                 .frame(height: 40)
-                .background(Color.white.opacity(0.2))
+                .background(VitaTheme.Colors.surfaceLight)
             
             StreakItem(
                 icon: "trophy.fill",
@@ -68,7 +68,7 @@ struct StreakSummaryView: View {
             
             Divider()
                 .frame(height: 40)
-                .background(Color.white.opacity(0.2))
+                .background(VitaTheme.Colors.surfaceLight)
             
             StreakItem(
                 icon: "checkmark.seal.fill",
@@ -100,11 +100,11 @@ struct StreakItem: View {
             
             Text("\(value)")
                 .font(VitaTheme.Fonts.statNumber)
-                .foregroundColor(.white)
+                .foregroundColor(VitaTheme.Colors.textPrimary)
             
             Text(label)
                 .font(VitaTheme.Fonts.statLabel)
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(VitaTheme.Colors.textTertiary)
         }
         .frame(maxWidth: .infinity)
     }

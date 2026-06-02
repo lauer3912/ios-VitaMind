@@ -118,12 +118,12 @@ struct FilterChip: View {
                 Text(title)
                     .font(VitaTheme.Fonts.caption)
             }
-            .foregroundColor(isSelected ? .white : .white.opacity(0.6))
+            .foregroundColor(isSelected ? Color.white : VitaTheme.Colors.textPrimary)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(
                 Capsule()
-                    .fill(isSelected ? VitaTheme.Colors.primary : VitaTheme.Colors.surface)
+                    .fill(isSelected ? VitaTheme.Colors.primary : VitaTheme.Colors.surfaceLight)
             )
         }
     }
@@ -161,11 +161,11 @@ struct StatItem: View {
                     .foregroundColor(VitaTheme.Colors.accent)
                 Text(value)
                     .font(VitaTheme.Fonts.titleMedium)
-                    .foregroundColor(.white)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
             }
             Text(label)
                 .font(VitaTheme.Fonts.statLabel)
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(VitaTheme.Colors.textTertiary)
         }
         .frame(maxWidth: .infinity)
     }
@@ -187,13 +187,13 @@ struct CollectionGrid: View {
             VStack(spacing: 8) {
                 Image(systemName: "square.stack.3d.up.slash")
                     .font(.system(size: 40))
-                    .foregroundColor(.white.opacity(0.4))
+                    .foregroundColor(VitaTheme.Colors.textTertiary)
                 Text("No cards in this category yet")
                     .font(VitaTheme.Fonts.body)
-                    .foregroundColor(.white.opacity(0.6))
+                    .foregroundColor(VitaTheme.Colors.textSecondary)
                 Text("Pull a daily card or build habits to grow your collection")
                     .font(VitaTheme.Fonts.caption)
-                    .foregroundColor(.white.opacity(0.4))
+                    .foregroundColor(VitaTheme.Colors.textTertiary)
                     .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
@@ -264,7 +264,7 @@ struct AchievementsSection: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Achievements")
                 .font(VitaTheme.Fonts.title)
-                .foregroundColor(.white)
+                .foregroundColor(VitaTheme.Colors.textPrimary)
                 .padding(.horizontal)
             
             ForEach(Array(gameState.achievements.enumerated()), id: \.element.id) { index, achievement in
@@ -302,15 +302,15 @@ struct CardDetailSheet: View {
                         
                         Text(card.name)
                             .font(VitaTheme.Fonts.displayBold)
-                            .foregroundColor(.white)
+                            .foregroundColor(VitaTheme.Colors.textPrimary)
                         
                         Text(card.description)
                             .font(VitaTheme.Fonts.body)
-                            .foregroundColor(.white.opacity(0.7))
+                            .foregroundColor(VitaTheme.Colors.textSecondary)
                             .multilineTextAlignment(.center)
                         
                         Divider()
-                            .background(Color.white.opacity(0.2))
+                            .background(VitaTheme.Colors.surfaceLight)
                         
                         HStack(spacing: 32) {
                             VStack {
@@ -319,16 +319,16 @@ struct CardDetailSheet: View {
                                     .foregroundColor(VitaTheme.Colors.primary)
                                 Text("Current")
                                     .font(VitaTheme.Fonts.caption)
-                                    .foregroundColor(.white.opacity(0.5))
+                                    .foregroundColor(VitaTheme.Colors.textTertiary)
                             }
                             
                             VStack {
                                 Text("\(Int(card.maxValue))")
                                     .font(VitaTheme.Fonts.statNumber)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(VitaTheme.Colors.textPrimary)
                                 Text("Goal")
                                     .font(VitaTheme.Fonts.caption)
-                                    .foregroundColor(.white.opacity(0.5))
+                                    .foregroundColor(VitaTheme.Colors.textTertiary)
                             }
                         }
                     }

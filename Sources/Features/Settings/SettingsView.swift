@@ -18,7 +18,7 @@ struct AppIconView: View {
                     .frame(width: 100, height: 100)
                 Image(systemName: "heart.fill")
                     .font(.system(size: 50))
-                    .foregroundColor(.white)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
             }
         }
     }
@@ -29,6 +29,10 @@ struct SettingsView: View {
     @StateObject private var aiService = AIService.shared
 
     @State private var switchError: String? = nil
+
+    // Persisted appearance mode (mirrors VitaPocketApp's @AppStorage so the
+    // Settings row reflects and updates the app-wide value).
+    @AppStorage("appearanceMode") private var appearanceModeRaw: String = AppearanceMode.system.rawValue
 
     var body: some View {
         NavigationStack {
@@ -114,7 +118,7 @@ struct SettingsView: View {
                                 } label: {
                                     Text("Use")
                                         .font(.caption)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(VitaTheme.Colors.textPrimary)
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 4)
                                         .background(Color.blue)
@@ -177,6 +181,33 @@ struct SettingsView: View {
                     }
                 } header: {
                     Text("App Info")
+                }
+
+                Section {
+                    ForEach(AppearanceMode.allCases) { mode in
+                        Button {
+                            appearanceModeRaw = mode.rawValue
+                        } label: {
+                            HStack {
+                                Image(systemName: mode.iconName)
+                                    .frame(width: 30)
+                                    .foregroundColor(.blue)
+                                Text(mode.displayName)
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                if appearanceModeRaw == mode.rawValue {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.blue)
+                                        .fontWeight(.semibold)
+                                }
+                            }
+                        }
+                        .accessibilityIdentifier("appearance_\(mode.rawValue)")
+                    }
+                } header: {
+                    Text("Appearance")
+                } footer: {
+                    Text("Choose Light, Dark, or follow your system setting.")
                 }
             }
             .navigationTitle("Settings")

@@ -387,18 +387,18 @@ struct AchievementCardView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(achievement.name)
                     .font(VitaTheme.Fonts.titleMedium)
-                    .foregroundColor(.white)
-                
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
+
                 Text(achievement.description)
                     .font(VitaTheme.Fonts.caption)
-                    .foregroundColor(.white.opacity(0.6))
+                    .foregroundColor(VitaTheme.Colors.textSecondary)
                 
                 // Progress bar
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.white.opacity(0.2))
-                        
+                            .fill(VitaTheme.Colors.surfaceLight)
+
                         RoundedRectangle(cornerRadius: 3)
                             .fill(achievement.rarity.color)
                             .frame(width: geo.size.width * achievement.progressPercent)

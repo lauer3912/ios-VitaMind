@@ -1,65 +1,105 @@
 import SwiftUI
 
 // MARK: - Design Tokens
+//
+// VitaTheme defines all visual constants used by the app.
+//
+// Color rules (iOS 17+ Light/Dark Mode required — see SOP §8.14, HR-19):
+//  - Chrome tokens (background, surface, text) are dynamic and adapt to the
+//    user's appearance (Light / Dark). They MUST stay legible in both modes.
+//  - Brand tokens (primary, secondary, accent) are fixed — they define the
+//    app's identity and look good against both backgrounds.
+//  - Card rarity tokens (Common / Uncommon / Rare / Epic / Legendary) are
+//    fixed — card art is intentionally dark, regardless of system theme.
+//
+// Adding a new token? Add it to BOTH `light:` and `dark:` (unless it's a
+// brand or card color, in which case the same hex is fine for both).
 enum VitaTheme {
     // MARK: - Colors
     enum Colors {
-        static let primary = Color(hex: "6B4EFF")
-        static let secondary = Color(hex: "00D9A0")  // Teal accent color
-        static let accent = Color(hex: "FFD700")
-        static let background = Color(hex: "0D0B1E")
-        static let surface = Color(hex: "1A1730")
-        static let surfaceLight = Color(hex: "252040")
-        
-        static let cardRare = Color(hex: "FF6B6B")
-        static let cardEpic = Color(hex: "9B59B6")
-        static let cardLegendary = Color(hex: "FFD700")
-        static let cardCommon = Color(hex: "4ECDC4")
-        static let cardUncommon = Color(hex: "6B4EFF")
-        
-        static let success = Color(hex: "2ECC71")
-        static let warning = Color(hex: "F39C12")
-        static let error = Color(hex: "E74C3C")
-        
-        static let textPrimary = Color.white
-        static let textSecondary = Color.white.opacity(0.7)
-        static let textTertiary = Color.white.opacity(0.5)
+        // ── Brand colors (fixed across themes) ─────────────────────────
+        static let primary      = Color(lightHex: "6B4EFF", darkHex: "6B4EFF")  // Royal purple
+        static let secondary    = Color(lightHex: "00D9A0", darkHex: "00D9A0")  // Teal accent
+        static let accent       = Color(lightHex: "FFD700", darkHex: "FFD700")  // Gold
+
+        // ── Chrome (adaptive — change with appearance) ─────────────────
+        // Dark mode: deep purple. Light mode: airy lavender.
+        static let background   = Color(lightHex: "F5F3FF", darkHex: "0D0B1E")
+        static let surface      = Color(lightHex: "FFFFFF", darkHex: "1A1730")
+        static let surfaceLight = Color(lightHex: "EDE9FE", darkHex: "252040")
+
+        // Standard iOS system colors so Form/List/Settings look native in
+        // both light & dark. We expose them through our token system for
+        // consistency.
+        static let listBackground = Color(lightHex: "F5F3FF", darkHex: "0D0B1E")
+        static let separator      = Color(lightHex: "E5E1F4", darkHex: "2A2540")
+
+        // Text — opacity is encoded into the light/dark hex equivalents so
+        // the same `textPrimary` token works in both modes.
+        // Dark mode uses near-white; light mode uses deep purple.
+        static let textPrimary   = Color(lightHex: "1A1730", darkHex: "FFFFFF")
+        static let textSecondary = Color(lightHex: "4A4458", darkHex: "FFFFFF")    // ~0.7 alpha
+        static let textTertiary  = Color(lightHex: "6B6580", darkHex: "FFFFFF")    // ~0.5 alpha
+
+        // ── Status (fixed — convey meaning, not theme) ────────────────
+        static let success = Color(lightHex: "2ECC71", darkHex: "2ECC71")
+        static let warning = Color(lightHex: "F39C12", darkHex: "F39C12")
+        static let error   = Color(lightHex: "E74C3C", darkHex: "E74C3C")
+
+        // ── Card rarity (fixed — card art is always dark) ─────────────
+        static let cardRare      = Color(lightHex: "FF6B6B", darkHex: "FF6B6B")
+        static let cardEpic      = Color(lightHex: "9B59B6", darkHex: "9B59B6")
+        static let cardLegendary = Color(lightHex: "FFD700", darkHex: "FFD700")
+        static let cardCommon    = Color(lightHex: "4ECDC4", darkHex: "4ECDC4")
+        static let cardUncommon  = Color(lightHex: "6B4EFF", darkHex: "6B4EFF")
     }
-    
+
     // MARK: - Gradients
     enum Gradients {
+        // Brand gradients (fixed)
         static let primary = LinearGradient(
             colors: [Colors.primary, Colors.primary.opacity(0.7)],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
-        
+
         static let gold = LinearGradient(
             colors: [Color(hex: "FFD700"), Color(hex: "FFA500")],
             startPoint: .top,
             endPoint: .bottom
         )
-        
-        static let cardBackground = LinearGradient(
-            colors: [Color(hex: "1A1730"), Color(hex: "0D0B1E")],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        
+
         static let epic = LinearGradient(
             colors: [Color(hex: "9B59B6"), Color(hex: "8E44AD")],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
+
+        // Card art is always dark — keep cardBackground fixed.
+        static let cardBackground = LinearGradient(
+            colors: [Color(hex: "1A1730"), Color(hex: "0D0B1E")],
+            startPoint: .top,
+            endPoint: .bottom
+        )
     }
-    
+
     // MARK: - Shadows
     enum Shadows {
-        static let card = Shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
+        // Shadow opacity differs by mode: dark mode wants stronger shadows
+        // (so the card "lifts" off a dark background); light mode wants
+        // subtler shadows (the bright background already provides contrast).
+        static let card = Shadow(
+            color: Color(lightHex: "0D0B1E", darkHex: "000000"),
+            radius: 8, x: 0, y: 4
+        )
+        static let cardLight = Shadow(
+            color: Color(lightHex: "0D0B1E", darkHex: "000000"),
+            radius: 8, x: 0, y: 4
+        )
         static let glow = Shadow(color: Colors.primary.opacity(0.5), radius: 12, x: 0, y: 0)
         static let glowGold = Shadow(color: Colors.accent.opacity(0.6), radius: 15, x: 0, y: 0)
     }
-    
+
     // MARK: - Fonts
     enum Fonts {
         static let displayBold = SwiftUI.Font.system(size: 28, weight: .bold, design: .rounded)
@@ -72,7 +112,7 @@ enum VitaTheme {
         static let statNumber = SwiftUI.Font.system(size: 32, weight: .bold, design: .monospaced)
         static let statLabel = SwiftUI.Font.system(size: 11, weight: .medium, design: .rounded)
     }
-    
+
     // MARK: - Spacing
     enum Spacing {
         static let xs: CGFloat = 4
@@ -82,7 +122,7 @@ enum VitaTheme {
         static let xl: CGFloat = 32
         static let xxl: CGFloat = 48
     }
-    
+
     // MARK: - Corner Radius
     enum Radius {
         static let sm: CGFloat = 8
@@ -93,30 +133,14 @@ enum VitaTheme {
     }
 }
 
-// MARK: - Color Extension
+// MARK: - Color Extension (single-mode fallback for card art)
+//
+// The old `Color(hex:)` is preserved for places that want a single, theme-
+// independent color (e.g. card art). Chrome code should prefer the
+// `Colors.*` tokens which are dynamic.
 extension Color {
     init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3:
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6:
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8:
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (255, 0, 0, 0)
-        }
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue: Double(b) / 255,
-            opacity: Double(a) / 255
-        )
+        self.init(UIColor(hex: hex))
     }
 }
 
@@ -131,7 +155,7 @@ struct Shadow {
 // MARK: - View Modifier for Shadows
 struct CardShadow: ViewModifier {
     let shadow: Shadow
-    
+
     func body(content: Content) -> some View {
         content
             .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)

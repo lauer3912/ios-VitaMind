@@ -123,13 +123,13 @@ struct CoachHeaderView: View {
                 
                 Image(systemName: "brain.head.profile")
                     .font(.system(size: 28))
-                    .foregroundColor(.white)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("VitaCoach")
                     .font(VitaTheme.Fonts.title)
-                    .foregroundColor(.white)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
                 
                 Text("Online • Ready to help")
                     .font(VitaTheme.Fonts.caption)
@@ -160,7 +160,7 @@ struct CoachMessageBubble: View {
                         .frame(width: 32, height: 32)
                     Image(systemName: "brain.head.profile")
                         .font(.system(size: 14))
-                        .foregroundColor(.white)
+                        .foregroundColor(VitaTheme.Colors.textPrimary)
                 }
             } else {
                 Spacer()
@@ -177,7 +177,7 @@ struct CoachMessageBubble: View {
                 
                 Text(formatTime(message.timestamp))
                     .font(VitaTheme.Fonts.caption)
-                    .foregroundColor(.white.opacity(0.5))
+                    .foregroundColor(VitaTheme.Colors.textTertiary)
             }
             
             if message.isUser {
@@ -187,7 +187,7 @@ struct CoachMessageBubble: View {
                         .frame(width: 32, height: 32)
                     Image(systemName: "person.fill")
                         .font(.system(size: 14))
-                        .foregroundColor(.white)
+                        .foregroundColor(VitaTheme.Colors.textPrimary)
                 }
             } else {
                 Spacer()
@@ -225,11 +225,11 @@ struct MarkdownText: View {
         ) {
             Text(attributed)
                 .font(VitaTheme.Fonts.body)
-                .foregroundColor(.white)
+                .foregroundColor(VitaTheme.Colors.textPrimary)
         } else {
             Text(cleanedContent)
                 .font(VitaTheme.Fonts.body)
-                .foregroundColor(.white)
+                .foregroundColor(VitaTheme.Colors.textPrimary)
         }
     }
 }
@@ -251,7 +251,7 @@ struct TypingIndicatorView: View {
                     .frame(width: 32, height: 32)
                 Image(systemName: "brain.head.profile")
                     .font(.system(size: 14))
-                    .foregroundColor(.white)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
             }
             
             HStack(spacing: 5) {
@@ -289,7 +289,7 @@ struct CoachInputBar: View {
         HStack(spacing: 12) {
             TextField("Ask VitaCoach...", text: $text)
                 .font(VitaTheme.Fonts.body)
-                .foregroundColor(.white)
+                .foregroundColor(VitaTheme.Colors.textPrimary)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background(

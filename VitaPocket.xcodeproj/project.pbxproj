@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0610912633D786E92FBCC3D7 /* HabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F1103EDB5A5E7A57226616 /* HabitsView.swift */; };
 		138675A406E347BA96ED9CA1 /* MiniMaxService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4C3C307B7C05283622BC65 /* MiniMaxService.swift */; };
+		21F4AF70A15F4F6FCC433D01 /* DynamicColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E37229E4C9CE26A08B23C4CA /* DynamicColor.swift */; };
 		21F605B5271279112CBD8A5C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748DB27F4856C6AE5E066FC2 /* SettingsView.swift */; };
 		2AED1382D91FE12EE06ED3F6 /* VitaMindWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA93DA5FA4FA86005C71FA7E /* VitaMindWidget.swift */; };
 		3115FD780CE06DD1DDCF3BC1 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290E1A8967BDE950C2F8253 /* HealthKitService.swift */; };
@@ -105,6 +106,7 @@
 		D3551BB2E892A34D610ABE4D /* VitaPocket.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaPocket.entitlements; sourceTree = "<group>"; };
 		DB080E6CA62B5E5D63AAE729 /* VitaTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaTheme.swift; sourceTree = "<group>"; };
 		E18FE85E26D9A7D8B7135AA8 /* VitaPocketWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaPocketWidget.entitlements; sourceTree = "<group>"; };
+		E37229E4C9CE26A08B23C4CA /* DynamicColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicColor.swift; sourceTree = "<group>"; };
 		E882E7CB9CFA913777CF455E /* PrivacyPolicy.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = PrivacyPolicy.html; sourceTree = "<group>"; };
 		F17D2D78B3CAA28102B7415D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA93DA5FA4FA86005C71FA7E /* VitaMindWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindWidget.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 		034285545379E2B38DDA735C /* Theme */ = {
 			isa = PBXGroup;
 			children = (
+				E37229E4C9CE26A08B23C4CA /* DynamicColor.swift */,
 				DB080E6CA62B5E5D63AAE729 /* VitaTheme.swift */,
 			);
 			path = Theme;
@@ -479,6 +482,7 @@
 				519394011C156B5CC73A9DE7 /* CoachView.swift in Sources */,
 				BE363C30F90F170597BB9590 /* CollectionView.swift in Sources */,
 				892F7C9201647B567B2040AD /* ContentView.swift in Sources */,
+				21F4AF70A15F4F6FCC433D01 /* DynamicColor.swift in Sources */,
 				775A3B5522AC1A4FE11B1D5A /* GameCardView.swift in Sources */,
 				4D08ED0F127B3059F7675093 /* GameState.swift in Sources */,
 				0610912633D786E92FBCC3D7 /* HabitsView.swift in Sources */,
