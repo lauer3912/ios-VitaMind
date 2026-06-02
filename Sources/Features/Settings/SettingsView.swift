@@ -27,8 +27,21 @@ struct AppIconView: View {
 struct SettingsView: View {
     @EnvironmentObject var gameState: GameState
     @StateObject private var aiService = AIService.shared
+    @StateObject private var notifications = NotificationManager.shared
 
     @State private var switchError: String? = nil
+
+    // MARK: - Notification status text (for Settings row subtitle)
+    private var notificationStatusText: String {
+        switch notifications.authorizationStatus {
+        case .authorized:    return notifications.isEnabled ? "On — 3 daily reminders" : "Off"
+        case .denied:        return "Denied in System Settings"
+        case .notDetermined: return "Permission not yet asked"
+        case .provisional:   return "Quiet delivery (provisional)"
+        case .ephemeral:     return "Ephemeral (App Clip only)"
+        @unknown default:    return "Unknown"
+        }
+    }
 
     // Persisted appearance mode (mirrors VitaPocketApp's @AppStorage so the
     // Settings row reflects and updates the app-wide value).
@@ -62,6 +75,42 @@ struct SettingsView: View {
                     Text("Appearance")
                 } footer: {
                     Text("Choose Light, Dark, or follow your system setting.")
+                }
+
+                Section {
+                    Toggle(isOn: Binding(
+                        get: { notifications.isEnabled && notifications.authorizationStatus == .authorized },
+                        set: { newValue in
+                            notifications.isEnabled = newValue
+                            Task { await gameState.applyNotificationPreferenceChange() }
+                        }
+                    )) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "bell.badge.fill")
+                                .foregroundColor(notifications.isEnabled ? .orange : .gray)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Daily Reminders")
+                                Text(notificationStatusText)
+                                    .font(VitaTheme.Fonts.caption)
+                                    .foregroundColor(VitaTheme.Colors.textSecondary)
+                            }
+                        }
+                    }
+                    .accessibilityIdentifier("settings_notifications_toggle")
+
+                    if notifications.authorizationStatus == .denied {
+                        Button {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        } label: {
+                            Label("Open System Settings", systemImage: "gear")
+                        }
+                    }
+                } header: {
+                    Text("Notifications")
+                } footer: {
+                    Text("Three gentle nudges: 9 AM (daily card), 8 PM (habit check-in), 10 PM (streak rescue). Local only — no server.")
                 }
 
                 Section {

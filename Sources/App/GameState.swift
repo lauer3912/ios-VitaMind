@@ -21,6 +21,7 @@ final class GameState: ObservableObject {
     private let healthKit = HealthKitService.shared
     private let persistence = PersistenceService.shared
     private let miniMax = MiniMaxService.shared
+    private let notifications = NotificationManager.shared
     
     // MARK: - XP Config
     private let xpPerHabit = 25
@@ -92,6 +93,24 @@ final class GameState: ObservableObject {
             setupMockHealthCards()
         }
     }
+
+    // MARK: - Notification Bootstrap
+    /// Request notification permission + re-schedule the three daily reminders
+    /// based on the current habit count. Safe to call multiple times.
+    func bootstrapNotifications() async {
+        await notifications.requestAuthorization()
+        await notifications.rescheduleAll(habitCount: habitCards.count)
+    }
+
+    /// Called by the Settings toggle. Re-applies the schedule immediately
+    /// so the change is visible in pending notifications right away.
+    func applyNotificationPreferenceChange() async {
+        if notifications.isEnabled {
+            await notifications.rescheduleAll(habitCount: habitCards.count)
+        } else {
+            notifications.cancelAll()
+        }
+    }
     
     // MARK: - Refresh Health Data from HealthKit
     func refreshHealthCardsFromHealthKit() async {
@@ -155,10 +174,10 @@ final class GameState: ObservableObject {
             // Update persistence
             persistence.saveHabitCards(habitCards)
             persistence.saveUserLevel(userLevel)
-            
+
             // Check achievements
             checkAllAchievements()
-            
+
             // Check if all habits completed today
             if todayHabitsCompleted >= habitCards.count {
                 unlockAchievement(id: "perfect_day")

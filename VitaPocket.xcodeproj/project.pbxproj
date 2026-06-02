@@ -23,6 +23,7 @@
 		775A3B5522AC1A4FE11B1D5A /* GameCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6BDA21F46317D428081154 /* GameCardView.swift */; };
 		7857EAECDDB6818CE3ADF9E8 /* VitaMindUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8157E00D1F6E225457E59F /* VitaMindUnitTests.swift */; };
 		7F9C26690085D539E4D3C504 /* CardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE9DC6FBFA47D21A75A0709 /* CardModels.swift */; };
+		879FCB1E5409936C8E4C0900 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B33C5A5EDF2BAE25B6CED1 /* NotificationManager.swift */; };
 		892F7C9201647B567B2040AD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81126468E4A26AA1FE5BFF5 /* ContentView.swift */; };
 		A44321AF09ABE35829A06C48 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 156DBD8B5B49DDD1CBFE8B87 /* LaunchScreen.storyboard */; };
 		BE363C30F90F170597BB9590 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F805C3A305BDFF174640A59 /* CollectionView.swift */; };
@@ -82,6 +83,7 @@
 		14D29713C642EAB078D0D911 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		156DBD8B5B49DDD1CBFE8B87 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1738A25727F41FC8F32C65DE /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		21B33C5A5EDF2BAE25B6CED1 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		2290E1A8967BDE950C2F8253 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
 		2B4C3C307B7C05283622BC65 /* MiniMaxService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniMaxService.swift; sourceTree = "<group>"; };
 		2EE9DC6FBFA47D21A75A0709 /* CardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModels.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 			children = (
 				2290E1A8967BDE950C2F8253 /* HealthKitService.swift */,
 				2B4C3C307B7C05283622BC65 /* MiniMaxService.swift */,
+				21B33C5A5EDF2BAE25B6CED1 /* NotificationManager.swift */,
 				14D29713C642EAB078D0D911 /* PersistenceService.swift */,
 			);
 			path = Services;
@@ -490,6 +493,7 @@
 				E7AAE3977F26D92C4C792062 /* HomeView.swift in Sources */,
 				5B776B0E321E818EE5A0D427 /* LegalDocumentView.swift in Sources */,
 				138675A406E347BA96ED9CA1 /* MiniMaxService.swift in Sources */,
+				879FCB1E5409936C8E4C0900 /* NotificationManager.swift in Sources */,
 				3B7E0725C53D0B238CEF4B23 /* PersistenceService.swift in Sources */,
 				21F605B5271279112CBD8A5C /* SettingsView.swift in Sources */,
 				364CCB3BEAA61A09B851B6C5 /* VitaPocketApp.swift in Sources */,

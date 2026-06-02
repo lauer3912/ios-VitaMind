@@ -8,11 +8,23 @@ struct VitaPocketApp: App {
     // Stored in UserDefaults; reads override the system setting.
     @AppStorage("appearanceMode") private var appearanceMode: String = AppearanceMode.system.rawValue
 
+    init() {
+        // No work here — `bootstrapNotifications()` runs in `.task`
+        // below so it can capture the `gameState` instance after it
+        // finishes initialising. Calling UNUserNotificationCenter
+        // during App.init would race with @StateObject creation.
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(gameState)
                 .preferredColorScheme(AppearanceMode(rawValue: appearanceMode)?.colorScheme)
+                .task {
+                    // Backup entry-point: also trigger here in case the
+                    // App-level Task above races with content render.
+                    await gameState.bootstrapNotifications()
+                }
         }
     }
 }
