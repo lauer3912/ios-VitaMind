@@ -107,6 +107,14 @@ struct SettingsView: View {
                             Label("Open System Settings", systemImage: "gear")
                         }
                     }
+
+                    Button {
+                        Task { await notifications.sendTestNotification() }
+                    } label: {
+                        Label("Send Test Notification", systemImage: "paperplane.fill")
+                    }
+                    .accessibilityIdentifier("settings_send_test_notification")
+                    .disabled(notifications.authorizationStatus != .authorized)
                 } header: {
                     Text("Notifications")
                 } footer: {

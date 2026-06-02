@@ -37,6 +37,7 @@ final class NotificationManager: ObservableObject {
     // MARK: - Init
 
     private init() {
+        UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
         Task { await refreshAuthorizationStatus() }
     }
 
@@ -89,6 +90,35 @@ final class NotificationManager: ObservableObject {
     }
 
     // MARK: - Individual Schedulers
+
+    /// Fire a one-shot test notification 1 second from now. Useful for
+    /// verifying permission is granted and the banner displays correctly
+    /// without waiting for the next 9 AM / 8 PM / 10 PM trigger.
+    func sendTestNotification() async {
+        let status = await refreshAuthorizationStatusRetval()
+        guard status == .authorized else {
+            print("[NotificationManager] sendTestNotification skipped (status=\(status.rawValue))")
+            return
+        }
+        let content = UNMutableNotificationContent()
+        content.title = "🧪 Test notification"
+        content.body  = "If you can see this, VitaPocket can reach you. ✅"
+        content.sound = .default
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: "vita.notify.test", content: content, trigger: trigger)
+        do {
+            try await UNUserNotificationCenter.current().add(request)
+            print("[NotificationManager] test notification scheduled")
+        } catch {
+            print("[NotificationManager] test notification error: \(error)")
+        }
+    }
+
+    private func refreshAuthorizationStatusRetval() async -> UNAuthorizationStatus {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        authorizationStatus = settings.authorizationStatus
+        return settings.authorizationStatus
+    }
 
     /// "Your daily card is ready" — every day at 09:00 local time.
     private func scheduleDailyCardPullReminder() {
@@ -143,5 +173,22 @@ final class NotificationManager: ObservableObject {
         components.hour = hour
         components.minute = minute
         return UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+    }
+}
+
+// MARK: - NotificationDelegate
+//
+// Ensures banner + sound play even when the app is in the foreground.
+// Without this, iOS suppresses banners while the user is actively using
+// the app, which makes local notifications feel broken during testing.
+private final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+    static let shared = NotificationDelegate()
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound, .badge])
     }
 }
