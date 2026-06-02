@@ -59,7 +59,9 @@ struct ContentView: View {
             
             // Card pull animation overlay
             if gameState.showCardAnimation, let card = gameState.lastPulledCard {
-                CardPullOverlay(card: card)
+                CardPullOverlay(card: card) {
+                    gameState.showCardAnimation = false
+                }
             }
         }
         .accessibilityIdentifier("main_content_view")
@@ -69,33 +71,52 @@ struct ContentView: View {
 // MARK: - Card Pull Overlay Animation
 struct CardPullOverlay: View {
     let card: HealthCard
+    let onClose: () -> Void
+
     @State private var opacity: Double = 0
     @State private var cardScale: CGFloat = 0.3
     @State private var cardRotation: Double = -30
     @State private var glowOpacity: Double = 0
-    
+    @State private var buttonOpacity: Double = 0
+
     var body: some View {
         ZStack {
             Color.black.opacity(opacity * 0.7)
                 .ignoresSafeArea()
-                .onTapGesture { }
-            
+                .onTapGesture { onClose() }
+
             VStack(spacing: 24) {
                 Text("NEW CARD!")
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundColor(VitaTheme.Colors.accent)
                     .tracking(4)
                     .opacity(opacity)
-                
+
                 GameCardView(card: card, isInteractive: false)
                     .scaleEffect(cardScale)
                     .rotationEffect(.degrees(cardRotation))
                     .opacity(opacity)
-                
+
                 Text(card.rarity.rawValue)
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
                     .foregroundColor(card.rarity.color)
                     .opacity(opacity)
+
+                Button(action: onClose) {
+                    Text("Add to Collection")
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(
+                            Capsule()
+                                .fill(VitaTheme.Colors.primary)
+                        )
+                }
+                .padding(.horizontal, 48)
+                .padding(.top, 8)
+                .opacity(buttonOpacity)
+                .accessibilityIdentifier("card_pull_dismiss")
             }
         }
         .onAppear {
@@ -105,10 +126,13 @@ struct CardPullOverlay: View {
                 cardRotation = 0
                 opacity = 1
             }
-            
             // Glow pulse
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
                 glowOpacity = 1
+            }
+            // Button fades in after the card lands
+            withAnimation(.easeIn(duration: 0.4).delay(0.5)) {
+                buttonOpacity = 1
             }
         }
     }

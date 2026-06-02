@@ -76,25 +76,27 @@ struct GameCardView: View {
                 shinePosition = 200
             }
         }
-        .onTapGesture {
-            if isInteractive {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
-                    rotation += 180
-                    isPressed = true
-                    cardLift = -10
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    isFlipped.toggle()
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        isPressed = false
-                        cardLift = 0
-                    }
-                }
-                onTap?()
+        // Only install the flip-on-tap gesture for *non-interactive* cards.
+        // For interactive cards (wrapped in a parent Button / NavigationLink),
+        // the parent MUST receive the tap — any onTapGesture here would
+        // steal the event and the parent's action would never fire.
+        .modifier(ConditionalTapGesture(isEnabled: !isInteractive, action: {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                rotation += 180
+                isPressed = true
+                cardLift = -10
             }
-        }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                isFlipped.toggle()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    isPressed = false
+                    cardLift = 0
+                }
+            }
+            onTap?()
+        }))
     }
 }
 
@@ -489,6 +491,24 @@ struct XPProgressBar: View {
             withAnimation(.easeOut(duration: 1.0)) {
                 animatedProgress = level.progress
             }
+        }
+    }
+}
+// MARK: - Conditional Gesture Modifier
+
+/// SwiftUI's `.onTapGesture` modifier cannot be conditionally applied.
+/// This wrapper lets us apply a tap handler only when `isEnabled == true`,
+/// so an interactive parent (Button / NavigationLink) actually receives
+/// the tap when our card is the label.
+struct ConditionalTapGesture: ViewModifier {
+    let isEnabled: Bool
+    let action: () -> Void
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content.onTapGesture(perform: action)
+        } else {
+            content
         }
     }
 }

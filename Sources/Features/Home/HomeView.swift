@@ -189,43 +189,41 @@ struct HealthCardsSection: View {
 struct HealthCardDetailView: View {
     let card: HealthCard
     @EnvironmentObject var gameState: GameState
-    
+
     var body: some View {
-        ZStack {
-            VitaTheme.Colors.background.ignoresSafeArea()
-            
-            VStack(spacing: 24) {
-                GameCardView(card: card, isInteractive: false)
-                    .accessibilityIdentifier("detail_card")
-                
-                VStack(spacing: 16) {
-                    Text(card.name)
-                        .font(VitaTheme.Fonts.displayBold)
-                        .foregroundColor(VitaTheme.Colors.textPrimary)
-                    
-                    Text(card.description)
-                        .font(VitaTheme.Fonts.body)
-                        .foregroundColor(VitaTheme.Colors.textSecondary)
-                        .multilineTextAlignment(.center)
-                    
-                    // Current stats
-                    HStack(spacing: 32) {
-                        VStack {
-                            Text("\(Int(card.currentValue))")
-                                .font(VitaTheme.Fonts.statNumber)
-                                .foregroundColor(VitaTheme.Colors.primary)
-                            Text(card.unit)
-                                .font(VitaTheme.Fonts.caption)
-                                .foregroundColor(VitaTheme.Colors.textTertiary)
-                        }
+        VStack(spacing: 24) {
+            GameCardView(card: card, isInteractive: false)
+                .accessibilityIdentifier("detail_card")
+
+            VStack(spacing: 16) {
+                Text(card.name)
+                    .font(VitaTheme.Fonts.displayBold)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
+
+                Text(card.description)
+                    .font(VitaTheme.Fonts.body)
+                    .foregroundColor(VitaTheme.Colors.textSecondary)
+                    .multilineTextAlignment(.center)
+
+                // Current stats
+                HStack(spacing: 32) {
+                    VStack {
+                        Text("\(Int(card.currentValue))")
+                            .font(VitaTheme.Fonts.statNumber)
+                            .foregroundColor(VitaTheme.Colors.primary)
+                        Text(card.unit)
+                            .font(VitaTheme.Fonts.caption)
+                            .foregroundColor(VitaTheme.Colors.textTertiary)
                     }
                 }
-                
-                Spacer()
             }
-            .padding()
+
+            Spacer()
         }
+        .padding()
+        .background(VitaTheme.Colors.background.ignoresSafeArea())
         .navigationTitle(card.name)
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -234,22 +232,22 @@ struct HealthCardDetailView: View {
 struct PullCardButton: View {
     @ObservedObject var gameState: GameState
     @State private var isAnimating = false
-    @State private var showConfetti = false
-    
+
     var body: some View {
         Button(action: {
-            // Trigger gacha animation
+            // Brief pulse for tactile feedback.
             withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
                 isAnimating = true
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.isAnimating = false
-                self.showConfetti = true
-                // Pull a new daily card
-                if let newCard = self.gameState.pullDailyCard() {
-                    print("Pulled new card: \(newCard.name)")
-                }
+                isAnimating = false
             }
+            // Pull a daily card. GameState sets `showCardAnimation = true`,
+            // which causes ContentView to present `CardPullOverlay`.
+            // The overlay owns its own dismiss (see `CardPullOverlay.onClose`).
+            // If the user has already pulled today, GameState returns nil
+            // and no overlay is shown.
+            _ = self.gameState.pullDailyCard()
         }) {
             HStack(spacing: 12) {
                 ZStack {
