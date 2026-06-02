@@ -65,29 +65,29 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    HStack {
+                    HStack(spacing: 12) {
                         Image(systemName: "lock.shield.fill")
                             .font(.title2)
-                            .foregroundColor(.green)
+                            .foregroundColor(VitaTheme.Colors.success)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("System AI")
+                                .foregroundColor(VitaTheme.Colors.textPrimary)
+                            Text(isSystemPreConfigured ? "Active" : "Tap to enable")
+                                .font(VitaTheme.Fonts.caption)
+                                .foregroundColor(VitaTheme.Colors.textSecondary)
+                        }
                         Spacer()
-                        VStack(alignment: .trailing) {
-                            Text("Ready")
-                                .foregroundColor(.green)
-                                .fontWeight(.medium)
-                            if isSystemPreConfigured {
-                                Text("Active")
-                                    .font(.caption)
-                                    .foregroundColor(.green)
-                            } else {
-                                Button("Use Default") {
-                                    AIService.shared.resetToDefaultProvider()
-                                }
-                                .font(.caption)
-                                .foregroundColor(.blue)
+                        if isSystemPreConfigured {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(VitaTheme.Colors.success)
+                        } else {
+                            Button("Use Default") {
+                                AIService.shared.resetToDefaultProvider()
                             }
+                            .font(VitaTheme.Fonts.caption)
+                            .foregroundColor(.blue)
                         }
                     }
-                    .listRowBackground(Color(.systemBackground))
                 } header: {
                     Text("System Pre-configured")
                 } footer: {
@@ -95,14 +95,17 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    HStack {
-                        Text("Active: ")
-                            .foregroundColor(.secondary)
-                        Text(AIService.shared.currentProvider == .minimaxCn ? "System Pre-configured" : AIService.shared.currentProvider.displayName)
-                            .foregroundColor(AIService.shared.currentProvider == .minimaxCn ? .green : .blue)
-                            .fontWeight(.medium)
+                    HStack(spacing: 12) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(VitaTheme.Colors.success)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Current Provider")
+                                .foregroundColor(VitaTheme.Colors.textPrimary)
+                            Text(AIService.shared.currentProvider == .minimaxCn ? "System Pre-configured" : AIService.shared.currentProvider.displayName)
+                                .font(VitaTheme.Fonts.caption)
+                                .foregroundColor(VitaTheme.Colors.textSecondary)
+                        }
                     }
-                    .font(.subheadline)
 
                     ForEach(customProviders, id: \.self) { provider in
                         if isProviderActive(provider) {
@@ -211,6 +214,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .listSectionSpacing(.compact)
         }
     }
 

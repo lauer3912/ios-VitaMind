@@ -120,26 +120,41 @@ struct CoachHeaderView: View {
                         )
                     )
                     .frame(width: 60, height: 60)
-                
+
                 Image(systemName: "brain.head.profile")
                     .font(.system(size: 28))
-                    .foregroundColor(VitaTheme.Colors.textPrimary)
+                    .foregroundColor(.white)
             }
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text("VitaCoach")
                     .font(VitaTheme.Fonts.title)
                     .foregroundColor(VitaTheme.Colors.textPrimary)
-                
-                Text("Online • Ready to help")
-                    .font(VitaTheme.Fonts.caption)
-                    .foregroundColor(VitaTheme.Colors.success)
+
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(VitaTheme.Colors.success)
+                        .frame(width: 8, height: 8)
+                    Text("Online • Ready to help")
+                        .font(VitaTheme.Fonts.caption)
+                        .foregroundColor(VitaTheme.Colors.textSecondary)
+                }
             }
-            
+
             Spacer()
         }
         .padding()
-        .background(VitaTheme.Colors.surface)
+        .background(
+            RoundedRectangle(cornerRadius: VitaTheme.Radius.lg)
+                .fill(VitaTheme.Colors.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: VitaTheme.Radius.lg)
+                        .stroke(VitaTheme.Colors.border, lineWidth: 1)
+                )
+                .cardShadow(VitaTheme.Shadows.cardTight)
+        )
+        .padding(.horizontal)
+        .padding(.bottom, 12)
     }
 }
 

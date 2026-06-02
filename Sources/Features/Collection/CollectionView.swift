@@ -31,6 +31,12 @@ struct CollectionView: View {
                         // Achievements
                         AchievementsSection()
                             .accessibilityIdentifier("achievements_section")
+
+                        // Extra clearance so the last achievement card never
+                        // hides behind the floating tab bar (TabView uses
+                        // ignoresSafeArea(.bottom), so we need explicit
+                        // padding instead of safeAreaInset).
+                        Color.clear.frame(height: 180)
                     }
                     .padding(.bottom, 24)
                 }
@@ -259,20 +265,68 @@ struct LockedCardView: View {
 // MARK: - Achievements Section
 struct AchievementsSection: View {
     @EnvironmentObject var gameState: GameState
-    
+
+    private let columns = [
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
+    ]
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Achievements")
                 .font(VitaTheme.Fonts.title)
                 .foregroundColor(VitaTheme.Colors.textPrimary)
                 .padding(.horizontal)
-            
-            ForEach(Array(gameState.achievements.enumerated()), id: \.element.id) { index, achievement in
-                AchievementCardView(achievement: achievement)
-                    .padding(.horizontal)
-                    .accessibilityIdentifier("achievement_\(index)")
+
+            LazyVGrid(columns: columns, spacing: 12) {
+                ForEach(Array(gameState.achievements.enumerated()), id: \.element.id) { index, achievement in
+                    CompactAchievementCard(achievement: achievement)
+                        .accessibilityIdentifier("achievement_\(index)")
+                }
             }
+            .padding(.horizontal)
         }
+        .padding(.bottom, 8)
+    }
+}
+
+/// Compact single-row achievement card for the 2-column grid.
+/// Shows icon, name, and +reward in one tight row.
+struct CompactAchievementCard: View {
+    let achievement: Achievement
+
+    var body: some View {
+        HStack(spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: VitaTheme.Radius.sm)
+                    .fill(achievement.isUnlocked ? achievement.rarity.color.opacity(0.15) : VitaTheme.Colors.surfaceLight)
+                    .frame(width: 36, height: 36)
+                Image(systemName: achievement.icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(achievement.isUnlocked ? achievement.rarity.color : VitaTheme.Colors.textTertiary)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(achievement.name)
+                    .font(VitaTheme.Fonts.captionBold)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
+                    .lineLimit(1)
+                Text("+\(achievement.xpReward) XP")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundColor(VitaTheme.Colors.accent)
+            }
+            Spacer()
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 10)
+        .background(
+            RoundedRectangle(cornerRadius: VitaTheme.Radius.md)
+                .fill(VitaTheme.Colors.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: VitaTheme.Radius.md)
+                        .stroke(VitaTheme.Colors.border, lineWidth: 1)
+                )
+                .cardShadow(VitaTheme.Shadows.cardTight)
+        )
     }
 }
 

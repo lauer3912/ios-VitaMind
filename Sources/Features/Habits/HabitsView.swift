@@ -13,7 +13,7 @@ struct HabitsView: View {
                         // Streak summary
                         StreakSummaryView()
                             .accessibilityIdentifier("habits_streak_summary")
-                        
+
                         // Habit cards
                         VStack(spacing: 12) {
                             ForEach(Array(gameState.habitCards.enumerated()), id: \.element.id) { index, habit in
@@ -24,6 +24,10 @@ struct HabitsView: View {
                             }
                         }
                         .padding(.horizontal)
+
+                        // Bottom breathing room so the last card never hides
+                        // behind the floating tab bar.
+                        Color.clear.frame(height: 80)
                     }
                     .padding(.vertical)
                 }

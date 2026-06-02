@@ -11,18 +11,21 @@ struct HomeView: View {
                     XPProgressBar(level: gameState.userLevel)
                         .padding(.horizontal)
                         .accessibilityIdentifier("home_xp_bar")
-                    
+
                     // Today's mission cards
                     TodayMissionSection()
                         .accessibilityIdentifier("home_today_missions")
-                    
+
                     // Health Cards Grid
                     HealthCardsSection()
                         .accessibilityIdentifier("home_health_cards")
-                    
+
                     // Pull card button
                     PullCardButton(gameState: gameState)
                         .accessibilityIdentifier("home_pull_button")
+
+                    // Bottom clearance for floating tab bar.
+                    Color.clear.frame(height: 80)
                 }
                 .padding(.vertical)
             }
@@ -64,6 +67,17 @@ struct TodayMissionSection: View {
                     }
                 }
                 .padding(.horizontal)
+            }
+            .overlay(alignment: .trailing) {
+                // Right-edge fade gradient hints the row is horizontally
+                // scrollable when more than 4 missions are present.
+                LinearGradient(
+                    colors: [VitaTheme.Colors.background.opacity(0), VitaTheme.Colors.background],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .frame(width: 40)
+                .allowsHitTesting(false)
             }
         }
     }
@@ -108,12 +122,12 @@ struct MissionCard: View {
 // MARK: - Health Cards Section
 struct HealthCardsSection: View {
     @EnvironmentObject var gameState: GameState
-    
+
     let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
     ]
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -128,16 +142,46 @@ struct HealthCardsSection: View {
                     .foregroundColor(VitaTheme.Colors.textSecondary)
             }
             .padding(.horizontal)
-            
-            LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(Array(gameState.healthCards.enumerated()), id: \.element.id) { index, card in
-                    NavigationLink(destination: HealthCardDetailView(card: card)) {
-                        GameCardView(card: card, isInteractive: true)
-                    }
-                    .accessibilityIdentifier("health_card_\(index)")
+
+            if gameState.healthCards.isEmpty {
+                // Empty state — visible placeholder that explains what
+                // goes here and how to populate it.
+                VStack(spacing: 12) {
+                    Image(systemName: "heart.text.square")
+                        .font(.system(size: 40))
+                        .foregroundColor(VitaTheme.Colors.textTertiary)
+                    Text("No health data yet")
+                        .font(VitaTheme.Fonts.body)
+                        .foregroundColor(VitaTheme.Colors.textPrimary)
+                    Text("Connect Health in Settings → Privacy to start collecting cards")
+                        .font(VitaTheme.Fonts.caption)
+                        .foregroundColor(VitaTheme.Colors.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 32)
+                .background(
+                    RoundedRectangle(cornerRadius: VitaTheme.Radius.lg)
+                        .fill(VitaTheme.Colors.surface)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: VitaTheme.Radius.lg)
+                                .stroke(VitaTheme.Colors.border, lineWidth: 1)
+                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
+                        )
+                )
+                .padding(.horizontal)
+            } else {
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(Array(gameState.healthCards.enumerated()), id: \.element.id) { index, card in
+                        NavigationLink(destination: HealthCardDetailView(card: card)) {
+                            GameCardView(card: card, isInteractive: true)
+                        }
+                        .accessibilityIdentifier("health_card_\(index)")
+                    }
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
         }
     }
 }

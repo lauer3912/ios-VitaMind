@@ -90,17 +90,21 @@ enum VitaTheme {
     // MARK: - Shadows
     enum Shadows {
         // Dark mode: strong black shadow lifts cards off the deep background.
-        // Light mode: soft violet shadow (instead of harsh black) — the
-        // "Apple Health" aesthetic. Pair with `border` for crispness.
+        // Light mode: SUBTLE dark-purple shadow at low opacity (NOT the full
+        // primary purple — that reads as "active glow" on every card, which
+        // is distracting). The card's `border` does the heavy visual
+        // lifting; the shadow is a quiet complement.
         static let card = Shadow(
-            color: Color(lightHex: "6B4EFF", darkHex: "000000"),
-            radius: 14, x: 0, y: 6
+            color: Color(lightHex: "1A0F2E", darkHex: "000000").opacity(0.08),
+            radius: 10, x: 0, y: 4
         )
         // Tighter shadow for small chips / inline elements.
         static let cardTight = Shadow(
-            color: Color(lightHex: "6B4EFF", darkHex: "000000"),
-            radius: 6, x: 0, y: 2
+            color: Color(lightHex: "1A0F2E", darkHex: "000000").opacity(0.06),
+            radius: 4, x: 0, y: 1
         )
+        // Reserved for genuinely glowing / active states (pulsing cards,
+        // focus rings). Do NOT use this for normal cards.
         static let glow = Shadow(color: Colors.primary.opacity(0.5), radius: 12, x: 0, y: 0)
         static let glowGold = Shadow(color: Colors.accent.opacity(0.6), radius: 15, x: 0, y: 0)
     }
@@ -114,7 +118,7 @@ enum VitaTheme {
         static let body = SwiftUI.Font.system(size: 16, weight: .regular, design: .default)
         static let caption = SwiftUI.Font.system(size: 13, weight: .regular, design: .default)
         static let captionBold = SwiftUI.Font.system(size: 12, weight: .bold, design: .rounded)
-        static let statNumber = SwiftUI.Font.system(size: 32, weight: .bold, design: .monospaced)
+        static let statNumber = SwiftUI.Font.system(size: 32, weight: .bold, design: .rounded)
         static let statLabel = SwiftUI.Font.system(size: 11, weight: .medium, design: .rounded)
     }
 
