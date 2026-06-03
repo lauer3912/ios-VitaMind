@@ -5,7 +5,7 @@ import UIKit
 
 // MARK: - NotificationManager
 //
-// Centralised wrapper around `UNUserNotificationCenter` for VitaPocket.
+// Centralised wrapper around `UNUserNotificationCenter` for VitaMindGo.
 // Handles: permission request, scheduling three categories of local
 // notifications (daily card pull, habit reminder, streak rescue),
 // and a user-facing on/off toggle persisted in UserDefaults.
@@ -102,7 +102,7 @@ final class NotificationManager: ObservableObject {
         }
         let content = UNMutableNotificationContent()
         content.title = "🧪 Test notification"
-        content.body  = "If you can see this, VitaPocket can reach you. ✅"
+        content.body  = "If you can see this, VitaMindGo can reach you. ✅"
         content.sound = .default
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: "vita.notify.test", content: content, trigger: trigger)

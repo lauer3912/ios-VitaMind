@@ -1,4 +1,4 @@
-# VitaPocket - Game-Inspired Health Card Collection
+# VitaMindGo - Game-Inspired Health Card Collection
 
 ## Design Philosophy
 Pokémon TCG Pocket 的核心魅力：3D动效 + 物理反馈 + 收集成就感

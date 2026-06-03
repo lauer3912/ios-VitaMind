@@ -1,4 +1,4 @@
-name: VitaPocket
+name: VitaMindGo
 options:
   bundleIdPrefix: com.ggsheng
   deploymentTarget:

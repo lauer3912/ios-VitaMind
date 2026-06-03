@@ -1,0 +1,873 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		14119E5D031CD759D880A9D5 /* VitaMindUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390CDD1ABAC1B9AE20310444 /* VitaMindUnitTests.swift */; };
+		1B2ECF6D8F9011A0EB1E4B4B /* AppStoreScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF53279F267F5ACB4D3D0F0 /* AppStoreScreenshotTests.swift */; };
+		1F678E1CF06F1E5EBBF11D37 /* TermsOfService.html in Resources */ = {isa = PBXBuildFile; fileRef = AEF778CA10DAF307723DA048 /* TermsOfService.html */; };
+		22994AE9D08B981A65D03AA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11A9640125DE75F5C8892B28 /* Assets.xcassets */; };
+		375CEE8E713E076468DB96A6 /* PrivacyPolicy.html in Resources */ = {isa = PBXBuildFile; fileRef = E40DED902DEEF2B49E155D53 /* PrivacyPolicy.html */; };
+		37DED3FF013DEBBAE63B2FDF /* NotifDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678DA04C40288EA16D8768D4 /* NotifDemoTests.swift */; };
+		44D8720FACFBBD495FE50162 /* MiniMaxService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EEA13EBB76241182FBA349 /* MiniMaxService.swift */; };
+		5734E5CAC63529C2621F10AC /* VitaPocketWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F0E2325B2D9FC8006F201B91 /* VitaPocketWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		581116DC5422B4D4B4F103B6 /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403A205DB5AA619FC30E4B5F /* AIProvider.swift */; };
+		5B663C16AE32730215443B59 /* LegalDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D00DD1CE40564CA8F571D69 /* LegalDocumentView.swift */; };
+		6875596A1834CC547E001110 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCABBB5E80CE742AF47887E /* NotificationManager.swift */; };
+		6CC21A6E79F56AD0FA5904A0 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F2A1B16C532AAB62E8C7B2 /* HealthKitService.swift */; };
+		721F0279F7831BDB39FA5EBB /* HabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8556EB39FF74CAB76A22E291 /* HabitsView.swift */; };
+		748F7788CA333C2F54BA98C0 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3130FFD1F36D07291C05515 /* PersistenceService.swift */; };
+		76CA8770226E961AC6B43FDA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2C5D561D6BFBBE9B3A58BA /* ContentView.swift */; };
+		9CEDC3337C09061689CFD9FB /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1CA006FAFA076916099507 /* GameState.swift */; };
+		A9AD655FA73A0B0BED2A4D05 /* DynamicColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D437358573E84B0C11C23529 /* DynamicColor.swift */; };
+		B56F2504D8E23CDBF890A63D /* VitaPocketUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1197B2E4298E59030B2B834 /* VitaPocketUITests.swift */; };
+		B77305B40352259D78FB4ACC /* AppIconLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B652BC07E92B9C5A6F9A50E2 /* AppIconLoader.swift */; };
+		C6426403A3420078C07FD540 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE214FF5381C12BA107110 /* CollectionView.swift */; };
+		CBFBCB71BA7CD10E4FCEA4FE /* CoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9F7D2C3E57790E1B5ED38D /* CoachView.swift */; };
+		CD906BE7D2170936D8B48B47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF1735B8D3DB1F1BBBA64C63 /* Assets.xcassets */; };
+		CEE84D2F9410CEA8C8B048FC /* GameCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536FA57B47211FA5BB2F0C6B /* GameCardView.swift */; };
+		D7C7391A37C8A472B565EF9B /* CardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7FF9F390C23A9F20D36FBF /* CardModels.swift */; };
+		E19E29BC0CC8830EEE12C3BB /* VitaMindWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3CBE342AE828EAFE5C6A8FD /* VitaMindWidget.swift */; };
+		E5A78C282F79EE3919117763 /* EmptyStateCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A654448F849ED17D0E1596F3 /* EmptyStateCaptureTests.swift */; };
+		F249E07E046611D417970024 /* AppStoreScreenshotIPadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E45A750D6B9457F79649F57 /* AppStoreScreenshotIPadTests.swift */; };
+		F74DDCCFEF60A769B035445B /* VitaTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FC1BE12A10312EA30CC4C7 /* VitaTheme.swift */; };
+		F8EB1385FA89CF02EAFB4FA7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B88C84BAD273D088D30755F /* SettingsView.swift */; };
+		FA1974A6AAD4B78E2704870D /* VitaPocketApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7A1E8545AC3B82F9D6D35 /* VitaPocketApp.swift */; };
+		FBB60CD23C7E7EAF098A8756 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C78675D652456454428767 /* HomeView.swift */; };
+		FCEF5B23FD5AB1E24D4640FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6B719BBCB2FD9AC31CBB988 /* LaunchScreen.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		34ADB024CCD04E5E51468003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8AB8E7D20480B8A0EAC9C851 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70130AD031B044BE84FCE2E4;
+			remoteInfo = VitaPocket;
+		};
+		609616B0E2A32238AE12000A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8AB8E7D20480B8A0EAC9C851 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70130AD031B044BE84FCE2E4;
+			remoteInfo = VitaPocket;
+		};
+		F54222AB2A5D3B8885E30139 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8AB8E7D20480B8A0EAC9C851 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A2576FA22693F0D0B93CDCB;
+			remoteInfo = VitaPocketWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		24BD403953A6DD1D7EF43EF8 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5734E5CAC63529C2621F10AC /* VitaPocketWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0B3AA6CBA911C12B4AFA43D2 /* VitaMindWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaMindWidget.entitlements; sourceTree = "<group>"; };
+		11A9640125DE75F5C8892B28 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		12BC2578A6D5B9F73A8E7D58 /* VitaPocket.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaPocket.entitlements; sourceTree = "<group>"; };
+		15D7A1E8545AC3B82F9D6D35 /* VitaPocketApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaPocketApp.swift; sourceTree = "<group>"; };
+		1EF53279F267F5ACB4D3D0F0 /* AppStoreScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotTests.swift; sourceTree = "<group>"; };
+		2B88C84BAD273D088D30755F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		30FE214FF5381C12BA107110 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		356B69CDFAFDF9A90A0C9B80 /* VitaPocketUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitaPocketUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		390CDD1ABAC1B9AE20310444 /* VitaMindUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindUnitTests.swift; sourceTree = "<group>"; };
+		403A205DB5AA619FC30E4B5F /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIProvider.swift; sourceTree = "<group>"; };
+		44C78675D652456454428767 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		536FA57B47211FA5BB2F0C6B /* GameCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCardView.swift; sourceTree = "<group>"; };
+		678DA04C40288EA16D8768D4 /* NotifDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifDemoTests.swift; sourceTree = "<group>"; };
+		6A689C036D0DB74D9158998E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6A9F7D2C3E57790E1B5ED38D /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachView.swift; sourceTree = "<group>"; };
+		6D00DD1CE40564CA8F571D69 /* LegalDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalDocumentView.swift; sourceTree = "<group>"; };
+		75EEA13EBB76241182FBA349 /* MiniMaxService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniMaxService.swift; sourceTree = "<group>"; };
+		8556EB39FF74CAB76A22E291 /* HabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsView.swift; sourceTree = "<group>"; };
+		9E45A750D6B9457F79649F57 /* AppStoreScreenshotIPadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotIPadTests.swift; sourceTree = "<group>"; };
+		A654448F849ED17D0E1596F3 /* EmptyStateCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateCaptureTests.swift; sourceTree = "<group>"; };
+		A6B719BBCB2FD9AC31CBB988 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AEF778CA10DAF307723DA048 /* TermsOfService.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = TermsOfService.html; sourceTree = "<group>"; };
+		B3CBE342AE828EAFE5C6A8FD /* VitaMindWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaMindWidget.swift; sourceTree = "<group>"; };
+		B652BC07E92B9C5A6F9A50E2 /* AppIconLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconLoader.swift; sourceTree = "<group>"; };
+		BE1CA006FAFA076916099507 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		C5FC1BE12A10312EA30CC4C7 /* VitaTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaTheme.swift; sourceTree = "<group>"; };
+		CA174024DA3E266F5CE0F931 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CF1735B8D3DB1F1BBBA64C63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D1197B2E4298E59030B2B834 /* VitaPocketUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaPocketUITests.swift; sourceTree = "<group>"; };
+		D437358573E84B0C11C23529 /* DynamicColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicColor.swift; sourceTree = "<group>"; };
+		DDCABBB5E80CE742AF47887E /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		E2755262C4B7B20E88E4D137 /* VitaPocketWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitaPocketWidget.entitlements; sourceTree = "<group>"; };
+		E3130FFD1F36D07291C05515 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		E40DED902DEEF2B49E155D53 /* PrivacyPolicy.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = PrivacyPolicy.html; sourceTree = "<group>"; };
+		EC2C5D561D6BFBBE9B3A58BA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		ED6582D7B636C5CBC4DD40A2 /* VitaPocket.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VitaPocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0E2325B2D9FC8006F201B91 /* VitaPocketWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = VitaPocketWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9F2A1B16C532AAB62E8C7B2 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		FA7FF9F390C23A9F20D36FBF /* CardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModels.swift; sourceTree = "<group>"; };
+		FD9E953CC171D19CA482EDF5 /* VitaPocketTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitaPocketTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0041ABE1160A22892C10A732 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				44C78675D652456454428767 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		02AEA11CD6C3A26D7D9E3B36 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				BDB71E71E4679B20219D8B11 /* Coach */,
+				D08E93FB2D83E23460F42C61 /* Collection */,
+				25EFAF90CB8877799A19078C /* Habits */,
+				0041ABE1160A22892C10A732 /* Home */,
+				4ED98B7975EB1734D0AE0602 /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		1F1877077CAB152DECE2C699 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BB275BFFFCD4838FE422104A /* Docs */,
+				CF1735B8D3DB1F1BBBA64C63 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		25EFAF90CB8877799A19078C /* Habits */ = {
+			isa = PBXGroup;
+			children = (
+				8556EB39FF74CAB76A22E291 /* HabitsView.swift */,
+			);
+			path = Habits;
+			sourceTree = "<group>";
+		};
+		31709B7E3D9C11621ACD77A3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				403A205DB5AA619FC30E4B5F /* AIProvider.swift */,
+				B652BC07E92B9C5A6F9A50E2 /* AppIconLoader.swift */,
+				FA7FF9F390C23A9F20D36FBF /* CardModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3C51DF0DFBC18010827F35D7 = {
+			isa = PBXGroup;
+			children = (
+				EDE4D4A2F887751826059508 /* Sources */,
+				C89AF394C357579A932514A6 /* Tests */,
+				A61EDD79AAD9DB62CDB89156 /* UITests */,
+				ADFC29370D8E8A427F30EE1B /* Widget */,
+				589E52E713426DE20EDE1A25 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		40D8261E91F9380295209D3E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				EC2C5D561D6BFBBE9B3A58BA /* ContentView.swift */,
+				BE1CA006FAFA076916099507 /* GameState.swift */,
+				15D7A1E8545AC3B82F9D6D35 /* VitaPocketApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		4ED98B7975EB1734D0AE0602 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				6D00DD1CE40564CA8F571D69 /* LegalDocumentView.swift */,
+				2B88C84BAD273D088D30755F /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		589E52E713426DE20EDE1A25 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ED6582D7B636C5CBC4DD40A2 /* VitaPocket.app */,
+				FD9E953CC171D19CA482EDF5 /* VitaPocketTests.xctest */,
+				356B69CDFAFDF9A90A0C9B80 /* VitaPocketUITests.xctest */,
+				F0E2325B2D9FC8006F201B91 /* VitaPocketWidget.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77E680CC33FCE716887F0380 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		80DE26229E8056ECE083A3FC /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				D437358573E84B0C11C23529 /* DynamicColor.swift */,
+				C5FC1BE12A10312EA30CC4C7 /* VitaTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A61EDD79AAD9DB62CDB89156 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				9E45A750D6B9457F79649F57 /* AppStoreScreenshotIPadTests.swift */,
+				1EF53279F267F5ACB4D3D0F0 /* AppStoreScreenshotTests.swift */,
+				A654448F849ED17D0E1596F3 /* EmptyStateCaptureTests.swift */,
+				678DA04C40288EA16D8768D4 /* NotifDemoTests.swift */,
+				D1197B2E4298E59030B2B834 /* VitaPocketUITests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		ADFC29370D8E8A427F30EE1B /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				11A9640125DE75F5C8892B28 /* Assets.xcassets */,
+				6A689C036D0DB74D9158998E /* Info.plist */,
+				0B3AA6CBA911C12B4AFA43D2 /* VitaMindWidget.entitlements */,
+				B3CBE342AE828EAFE5C6A8FD /* VitaMindWidget.swift */,
+				E2755262C4B7B20E88E4D137 /* VitaPocketWidget.entitlements */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
+		BB275BFFFCD4838FE422104A /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+				E40DED902DEEF2B49E155D53 /* PrivacyPolicy.html */,
+				AEF778CA10DAF307723DA048 /* TermsOfService.html */,
+			);
+			path = Docs;
+			sourceTree = "<group>";
+		};
+		BDA3CB7A57A50B4B3829F424 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				F9F2A1B16C532AAB62E8C7B2 /* HealthKitService.swift */,
+				75EEA13EBB76241182FBA349 /* MiniMaxService.swift */,
+				DDCABBB5E80CE742AF47887E /* NotificationManager.swift */,
+				E3130FFD1F36D07291C05515 /* PersistenceService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		BDB71E71E4679B20219D8B11 /* Coach */ = {
+			isa = PBXGroup;
+			children = (
+				6A9F7D2C3E57790E1B5ED38D /* CoachView.swift */,
+			);
+			path = Coach;
+			sourceTree = "<group>";
+		};
+		C4D5BB417AC1E287BEFDFBC5 /* CardEngine */ = {
+			isa = PBXGroup;
+			children = (
+				536FA57B47211FA5BB2F0C6B /* GameCardView.swift */,
+			);
+			path = CardEngine;
+			sourceTree = "<group>";
+		};
+		C89AF394C357579A932514A6 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				390CDD1ABAC1B9AE20310444 /* VitaMindUnitTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		CF370DB84236506FD0F1058C /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				C4D5BB417AC1E287BEFDFBC5 /* CardEngine */,
+				77E680CC33FCE716887F0380 /* Extensions */,
+				80DE26229E8056ECE083A3FC /* Theme */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		D08E93FB2D83E23460F42C61 /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+				30FE214FF5381C12BA107110 /* CollectionView.swift */,
+			);
+			path = Collection;
+			sourceTree = "<group>";
+		};
+		EDE4D4A2F887751826059508 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				40D8261E91F9380295209D3E /* App */,
+				CF370DB84236506FD0F1058C /* Core */,
+				02AEA11CD6C3A26D7D9E3B36 /* Features */,
+				31709B7E3D9C11621ACD77A3 /* Models */,
+				1F1877077CAB152DECE2C699 /* Resources */,
+				BDA3CB7A57A50B4B3829F424 /* Services */,
+				CA174024DA3E266F5CE0F931 /* Info.plist */,
+				A6B719BBCB2FD9AC31CBB988 /* LaunchScreen.storyboard */,
+				12BC2578A6D5B9F73A8E7D58 /* VitaPocket.entitlements */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5A2576FA22693F0D0B93CDCB /* VitaPocketWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 21A6F77399532C22460F1969 /* Build configuration list for PBXNativeTarget "VitaPocketWidget" */;
+			buildPhases = (
+				A9D9FFE3340A86A530AD2EFF /* Sources */,
+				D5D2E9AC806ADE845282DFEE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VitaPocketWidget;
+			packageProductDependencies = (
+			);
+			productName = VitaPocketWidget;
+			productReference = F0E2325B2D9FC8006F201B91 /* VitaPocketWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		70130AD031B044BE84FCE2E4 /* VitaPocket */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D385D8D5FDD5591D48317EEA /* Build configuration list for PBXNativeTarget "VitaPocket" */;
+			buildPhases = (
+				3035F4BA0400E9D80CF43856 /* Sources */,
+				940BD35E5F0579BC3D3AC688 /* Resources */,
+				24BD403953A6DD1D7EF43EF8 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				764A71883C38A55309A45566 /* PBXTargetDependency */,
+			);
+			name = VitaPocket;
+			packageProductDependencies = (
+			);
+			productName = VitaPocket;
+			productReference = ED6582D7B636C5CBC4DD40A2 /* VitaPocket.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CC2185C8CEDD8DD7FD7696B0 /* VitaPocketTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 911B3187C6A398267D5FBB19 /* Build configuration list for PBXNativeTarget "VitaPocketTests" */;
+			buildPhases = (
+				E926467E58308D8196909DEC /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EA7AB033D70175794261DA7B /* PBXTargetDependency */,
+			);
+			name = VitaPocketTests;
+			packageProductDependencies = (
+			);
+			productName = VitaPocketTests;
+			productReference = FD9E953CC171D19CA482EDF5 /* VitaPocketTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F12309759300E397DE99D2CF /* VitaPocketUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CFF16874F50F485ECC0F9F6 /* Build configuration list for PBXNativeTarget "VitaPocketUITests" */;
+			buildPhases = (
+				7788C5054B7286FE38D0A63F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B51B7C6238B082C45A08FC09 /* PBXTargetDependency */,
+			);
+			name = VitaPocketUITests;
+			packageProductDependencies = (
+			);
+			productName = VitaPocketUITests;
+			productReference = 356B69CDFAFDF9A90A0C9B80 /* VitaPocketUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8AB8E7D20480B8A0EAC9C851 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					5A2576FA22693F0D0B93CDCB = {
+						DevelopmentTeam = 9L6N2ZF26B;
+						ProvisioningStyle = Automatic;
+					};
+					70130AD031B044BE84FCE2E4 = {
+						DevelopmentTeam = 9L6N2ZF26B;
+						ProvisioningStyle = Automatic;
+					};
+					CC2185C8CEDD8DD7FD7696B0 = {
+						DevelopmentTeam = 9L6N2ZF26B;
+						ProvisioningStyle = Automatic;
+					};
+					F12309759300E397DE99D2CF = {
+						DevelopmentTeam = 9L6N2ZF26B;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 70130AD031B044BE84FCE2E4;
+					};
+				};
+			};
+			buildConfigurationList = 6D6280F138E5893CA3AE0CD4 /* Build configuration list for PBXProject "VitaMindGo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 3C51DF0DFBC18010827F35D7;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 589E52E713426DE20EDE1A25 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				70130AD031B044BE84FCE2E4 /* VitaPocket */,
+				CC2185C8CEDD8DD7FD7696B0 /* VitaPocketTests */,
+				F12309759300E397DE99D2CF /* VitaPocketUITests */,
+				5A2576FA22693F0D0B93CDCB /* VitaPocketWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		940BD35E5F0579BC3D3AC688 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD906BE7D2170936D8B48B47 /* Assets.xcassets in Resources */,
+				FCEF5B23FD5AB1E24D4640FF /* LaunchScreen.storyboard in Resources */,
+				375CEE8E713E076468DB96A6 /* PrivacyPolicy.html in Resources */,
+				1F678E1CF06F1E5EBBF11D37 /* TermsOfService.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5D2E9AC806ADE845282DFEE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22994AE9D08B981A65D03AA3 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3035F4BA0400E9D80CF43856 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				581116DC5422B4D4B4F103B6 /* AIProvider.swift in Sources */,
+				B77305B40352259D78FB4ACC /* AppIconLoader.swift in Sources */,
+				D7C7391A37C8A472B565EF9B /* CardModels.swift in Sources */,
+				CBFBCB71BA7CD10E4FCEA4FE /* CoachView.swift in Sources */,
+				C6426403A3420078C07FD540 /* CollectionView.swift in Sources */,
+				76CA8770226E961AC6B43FDA /* ContentView.swift in Sources */,
+				A9AD655FA73A0B0BED2A4D05 /* DynamicColor.swift in Sources */,
+				CEE84D2F9410CEA8C8B048FC /* GameCardView.swift in Sources */,
+				9CEDC3337C09061689CFD9FB /* GameState.swift in Sources */,
+				721F0279F7831BDB39FA5EBB /* HabitsView.swift in Sources */,
+				6CC21A6E79F56AD0FA5904A0 /* HealthKitService.swift in Sources */,
+				FBB60CD23C7E7EAF098A8756 /* HomeView.swift in Sources */,
+				5B663C16AE32730215443B59 /* LegalDocumentView.swift in Sources */,
+				44D8720FACFBBD495FE50162 /* MiniMaxService.swift in Sources */,
+				6875596A1834CC547E001110 /* NotificationManager.swift in Sources */,
+				748F7788CA333C2F54BA98C0 /* PersistenceService.swift in Sources */,
+				F8EB1385FA89CF02EAFB4FA7 /* SettingsView.swift in Sources */,
+				FA1974A6AAD4B78E2704870D /* VitaPocketApp.swift in Sources */,
+				F74DDCCFEF60A769B035445B /* VitaTheme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7788C5054B7286FE38D0A63F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F249E07E046611D417970024 /* AppStoreScreenshotIPadTests.swift in Sources */,
+				1B2ECF6D8F9011A0EB1E4B4B /* AppStoreScreenshotTests.swift in Sources */,
+				E5A78C282F79EE3919117763 /* EmptyStateCaptureTests.swift in Sources */,
+				37DED3FF013DEBBAE63B2FDF /* NotifDemoTests.swift in Sources */,
+				B56F2504D8E23CDBF890A63D /* VitaPocketUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9D9FFE3340A86A530AD2EFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E19E29BC0CC8830EEE12C3BB /* VitaMindWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E926467E58308D8196909DEC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14119E5D031CD759D880A9D5 /* VitaMindUnitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		764A71883C38A55309A45566 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A2576FA22693F0D0B93CDCB /* VitaPocketWidget */;
+			targetProxy = F54222AB2A5D3B8885E30139 /* PBXContainerItemProxy */;
+		};
+		B51B7C6238B082C45A08FC09 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70130AD031B044BE84FCE2E4 /* VitaPocket */;
+			targetProxy = 609616B0E2A32238AE12000A /* PBXContainerItemProxy */;
+		};
+		EA7AB033D70175794261DA7B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70130AD031B044BE84FCE2E4 /* VitaPocket */;
+			targetProxy = 34ADB024CCD04E5E51468003 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3D725C7FA0C15743855351AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sources/VitaPocket.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4285798BDC5F4C31DC912A07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sources/VitaPocket.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		46A13A906C9E5546FED51B26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMindUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VitaPocket;
+			};
+			name = Release;
+		};
+		66224F47B93BD39E7A2290AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_EXTENSION_IMAGE_PLACEHOLDER = "";
+				CODE_SIGN_ENTITLEMENTS = Widget/VitaPocketWidget.entitlements;
+				DEVELOPMENT_TEAM = 9L6N2ZF26B;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		92B21B7C804B9F7B86668264 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMindTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VitaPocket.app/VitaPocket";
+			};
+			name = Debug;
+		};
+		9C2B120B21729F2A0A784C86 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMindUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VitaPocket;
+			};
+			name = Debug;
+		};
+		CF1ED92AE744283045BC492C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9L6N2ZF26B;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 3.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D5BA2EB27E991A42A081320B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9L6N2ZF26B;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 3.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F0957EBE5A2AC63FD9BF33DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMindTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VitaPocket.app/VitaPocket";
+			};
+			name = Release;
+		};
+		F634A74AD0A6B63DA7AB0537 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_EXTENSION_IMAGE_PLACEHOLDER = "";
+				CODE_SIGN_ENTITLEMENTS = Widget/VitaPocketWidget.entitlements;
+				DEVELOPMENT_TEAM = 9L6N2ZF26B;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ggsheng.VitaMind.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0CFF16874F50F485ECC0F9F6 /* Build configuration list for PBXNativeTarget "VitaPocketUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C2B120B21729F2A0A784C86 /* Debug */,
+				46A13A906C9E5546FED51B26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		21A6F77399532C22460F1969 /* Build configuration list for PBXNativeTarget "VitaPocketWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F634A74AD0A6B63DA7AB0537 /* Debug */,
+				66224F47B93BD39E7A2290AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6D6280F138E5893CA3AE0CD4 /* Build configuration list for PBXProject "VitaMindGo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF1ED92AE744283045BC492C /* Debug */,
+				D5BA2EB27E991A42A081320B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		911B3187C6A398267D5FBB19 /* Build configuration list for PBXNativeTarget "VitaPocketTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92B21B7C804B9F7B86668264 /* Debug */,
+				F0957EBE5A2AC63FD9BF33DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D385D8D5FDD5591D48317EEA /* Build configuration list for PBXNativeTarget "VitaPocket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D725C7FA0C15743855351AC /* Debug */,
+				4285798BDC5F4C31DC912A07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8AB8E7D20480B8A0EAC9C851 /* Project object */;
+}
