@@ -262,11 +262,14 @@ final class GameState: ObservableObject {
             let response = try await miniMax.sendMessage(message)
             return response
         } catch {
-            // Return mock response if API fails
-            return generateMockResponse(to: message)
+            // No mock fallback — be honest with the user that the
+            // AI service is unavailable instead of fabricating a reply.
+            // Otherwise the Coach tab would pretend to be a real AI
+            // while actually serving hard-coded strings.
+            return "AI service is temporarily unavailable. Please try again in a moment."
         }
     }
-    
+
     func generateHealthAdvice() async -> String {
         do {
             return try await miniMax.generateHealthAdvice(
@@ -276,7 +279,8 @@ final class GameState: ObservableObject {
                 water: healthKit.todayWaterGlasses
             )
         } catch {
-            return generateMockHealthAdvice()
+            // Same honest-failure principle as sendMessageToCoach().
+            return "Unable to generate personalised advice right now. Please try again later."
         }
     }
     
@@ -356,41 +360,18 @@ final class GameState: ObservableObject {
         persistence.saveHabitCards(habitCards)
     }
     
-    // MARK: - Mock Response Generator
-    private func generateMockResponse(to message: String) -> String {
-        let lowercased = message.lowercased()
-        
-        if lowercased.contains("steps") || lowercased.contains("walk") {
-            return "Great question about steps! 💪 Walking 10,000 steps a day is a fantastic goal. Even a 15-minute walk after meals can make a big difference. Keep moving!"
-        } else if lowercased.contains("sleep") || lowercased.contains("rest") {
-            return "Sleep is so important! 😴 Try to get 7-9 hours and keep a consistent schedule. Avoid screens 1 hour before bed."
-        } else if lowercased.contains("water") || lowercased.contains("drink") {
-            return "Hydration key! 💧 Aim for 8 glasses a day. Start your morning with a big glass of water to kickstart your metabolism."
-        } else if lowercased.contains("meditat") || lowercased.contains("mindful") {
-            return "Meditation is powerful! 🧘 Even 5 minutes a day can reduce stress. Try focusing on your breath when your mind wanders."
-        } else {
-            return "That's a great point! Remember, consistency beats perfection. Small daily actions lead to big results over time. 🌟"
-        }
-    }
-    
-    private func generateMockHealthAdvice() -> String {
-        var tips: [String] = []
-        
-        if healthKit.todaySteps < 5000 {
-            tips.append("You're below 5,000 steps today. Try a short walk!")
-        }
-        if healthKit.todayWaterGlasses < 4 {
-            tips.append("Remember to drink more water!")
-        }
-        if healthKit.todaySleepHours < 7 {
-            tips.append("You might need more sleep tonight.")
-        }
-        
-        if tips.isEmpty {
-            return "You're doing great today! Keep up the excellent work. 🌟"
-        }
-        return tips.joined(separator: " ")
-    }
+    // MARK: - Mock Response Generator (REMOVED)
+    //
+    // Previously this section held two hard-coded response generators
+    // (generateMockResponse + generateMockHealthAdvice) that produced
+    // a fake "AI" reply when the MiniMax API call failed. The Coach
+    // tab would then appear to be working while actually showing
+    // canned strings, which would mislead users and risk App Store
+    // review feedback.
+    //
+    // Removed for App Store submission. The catch blocks in
+    // sendMessageToCoach / generateHealthAdvice now return honest
+    // "AI service is temporarily unavailable" messages instead.
 }
 
 // MARK: - Rarity Roll
