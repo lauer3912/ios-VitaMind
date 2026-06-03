@@ -33,14 +33,14 @@
 | 字段 | 内容 |
 |---|---|
 | **App 名称** | VitaMindGo |
-| **副标题** (Promotional Text) | Your AI-Powered Health Companion |
+| **副标题** (Promotional Text) | AI health coach for heart, sleep, habits. On-device AI, no account, no tracking. Apple Watch ready. (99 chars) |
 | **类别** | 健康健美 (Health & Fitness) + 医疗 (Medical) |
 | **价格** | 免费 |
 | **Bundle ID** | com.ggsheng.VitaMind (验证) |
 | **版本号** | 3.0.0 |
 | **Build** | 选刚才上传的 archive |
-| **隐私政策 URL** | https://lauer3912.github.io/ios-VitaMind/docs/privacy |
-| **Support URL** | https://lauer3912.github.io/ios-VitaMind/docs/ |
+| **隐私政策 URL** | https://lauer3912.github.io/ios-VitaMindGo/PrivacyPolicy.html |
+| **Support URL** | https://lauer3912.github.io/ios-VitaMindGo/ |
 | **营销 URL** | (选填, 同 Support) |
 
 ### 描述 (拷贝自 Listing.md §3)
@@ -56,10 +56,7 @@ VitaMindGo combines cutting-edge AI technology with comprehensive health monitor
 ### 关键词 (Listing.md §4)
 
 ```
-health, fitness, Apple Watch, heart rate, sleep, tracker, habit,
-wellness, AI, assistant, activity, steps, exercise, HRV, stress,
-mindfulness, water, reminder, vitals, healthkit, monitoring,
-notification, daily, streak, gamification, card, collection
+habit tracker, health, fitness, sleep, AI, heart rate, Apple Watch, wellness
 ```
 
 ### What's New (本次更新日志)
