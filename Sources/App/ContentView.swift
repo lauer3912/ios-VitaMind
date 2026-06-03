@@ -2,7 +2,15 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var gameState: GameState
-    @State private var selectedTab = 0
+
+    // Initial tab index. Normally 0 (Pocket). UI tests can set the
+    // VITA_INITIAL_TAB environment variable to land on a specific tab
+    // so screenshots can be captured without depending on swipe / tab
+    // bar tap reliability on iPad page-style TabView.
+    @State private var selectedTab: Int = {
+        let raw = ProcessInfo.processInfo.environment["VITA_INITIAL_TAB"] ?? "0"
+        return Int(raw) ?? 0
+    }()
     @State private var tabBounceIndex: Int? = nil
     
     var body: some View {

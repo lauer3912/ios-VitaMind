@@ -46,6 +46,9 @@ Understand your sleep patterns with detailed analysis and AI-powered recommendat
 📱 **Widgets & Quick Stats**
 View your health metrics at a glance with beautifully designed home screen widgets. No need to open the app for quick updates.
 
+🔔 **Daily Reminders (Local Notifications)**
+Stay on track with three gentle, server-free nudges: 9 AM for your daily card pull, 8 PM for habit check-in, and 10 PM as a streak rescue. All notifications run on-device via UserNotifications — no push servers, no tracking, no battery drain.
+
 🔒 **Privacy First**
 Your health data stays on your device. VitaMindGo uses on-device AI (CoreML) for processing, ensuring your most sensitive information never leaves your phone.
 
@@ -68,7 +71,8 @@ The initial version (3.0.0) is completely FREE with all features included. Futur
 ```
 health, fitness, Apple Watch, heart rate, sleep, tracker, habit,
 wellness, AI, assistant, activity, steps, exercise, HRV, stress,
-mindfulness, water, reminder, vitals, healthkit, monitoring
+mindfulness, water, reminder, vitals, healthkit, monitoring,
+notification, daily, streak, gamification, card, collection
 ```
 
 ---
@@ -110,12 +114,15 @@ mindfulness, water, reminder, vitals, healthkit, monitoring
 
 | Device | Size | Count | Location |
 |--------|------|-------|----------|
-| iPhone 6.7" | 1290×2796 px | 4 | AppStore/Screenshots/iPhone_67_1290x2796/ |
-| iPad Pro 13" | 2048×2732 px | 4 | AppStore/Screenshots/iPad_13_2048x2732/ |
+| iPhone 17 Pro Max (6.9") | 1320×2868 px | 5 | AppStore/Screenshots/iPhone17ProMax_1320x2868/ |
+| iPad Pro 13" (M4) | 2048×2732 px | 5 | AppStore/Screenshots/iPadPro13inchM4_2048x2732/ |
 
 **Screenshot Files:**
-- iPhone: `iPhone_6.7_Health.png`, `iPhone_6.7_Habits.png`, `iPhone_6.7_AI.png`, `iPhone_6.7_Settings.png`
-- iPad: `iPad_13_Health.png`, `iPad_13_Habits.png`, `iPad_13_AI.png`, `iPad_13_Settings.png`
+- iPhone: `vp_tab1_pocket.png`, `vp_tab2_habits.png`, `vp_tab3_coach.png`, `vp_tab4_collection.png`, `vp_tab5_settings.png`
+- iPad: `ipad_tab1.png`, `ipad_tab2.png`, `ipad_tab3.png`, `ipad_tab4.png`, `ipad_tab5_settings.png`
+
+**Last captured:** 2026-06-03 (re-captured after Mock-data removal + Settings tab + local notifications feature)
+- Legacy captures (5-31, 4 tabs only) moved to `AppStore/Screenshots/legacy-5-31/` and `legacy-5-31-ipad/`
 
 ---
 
