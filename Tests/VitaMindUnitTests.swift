@@ -1,4 +1,5 @@
 import XCTest
+@testable import VitaMindGo
 
 final class VitaPocketUnitTests: XCTestCase {
 
@@ -181,6 +182,57 @@ final class VitaPocketUnitTests: XCTestCase {
         // Empty array - index out of bounds
         let content = extractValue(from: json, keyPath: "choices.0.message.content")
         XCTAssertNil(content)
+    }
+
+    // MARK: - Apple Guideline 1.4.1 Regression Tests (2026-06-08)
+    // Required to prevent re-rejection after build 9 fix for VitaMindGo.
+    // Asserts the AI system prompt enforces citations and medical disclaimers.
+
+    func testAISystemPromptRequiresCitations() throws {
+        let prompt = AIService.vitaCoachSystemPrompt
+
+        // 1. Mandate citations rule exists
+        XCTAssertTrue(prompt.contains("CITATIONS"),
+                      "System prompt must include a 'CITATIONS' rule")
+
+        // 2. Required format 'Sources:' mentioned
+        XCTAssertTrue(prompt.contains("Sources:"),
+                      "System prompt must require 'Sources:' format for citations")
+
+        // 3. Authoritative source list (NIH, MedlinePlus, Mayo Clinic, CDC, PubMed)
+        for source in ["NIH", "MedlinePlus", "Mayo Clinic", "CDC", "PubMed"] {
+            XCTAssertTrue(prompt.contains(source),
+                          "System prompt must include '\(source)' as a citation source")
+        }
+
+        // 4. No medical claims rule
+        XCTAssertTrue(prompt.contains("NOT a doctor"),
+                      "System prompt must disclaim medical role with 'NOT a doctor'")
+    }
+
+    func testAISystemPromptHasEmergencyResponse() throws {
+        let prompt = AIService.vitaCoachSystemPrompt
+
+        // 1. Emergency rule exists
+        XCTAssertTrue(prompt.contains("EMERGENCY"),
+                      "System prompt must include an 'EMERGENCY' rule")
+
+        // 2. Mentions 911 (US emergency number)
+        XCTAssertTrue(prompt.contains("911"),
+                      "System prompt must mention 911 for US emergencies")
+
+        // 3. Recommends professional medical advice
+        XCTAssertTrue(prompt.contains("healthcare professional"),
+                      "System prompt must recommend consulting a healthcare professional")
+    }
+
+    func testAISystemPromptLengthIsReasonable() throws {
+        // Guards against accidental prompt bloat (would increase per-request token cost)
+        let prompt = AIService.vitaCoachSystemPrompt
+        XCTAssertLessThan(prompt.count, 2000,
+                          "System prompt should stay under 2000 chars to control token cost")
+        XCTAssertGreaterThan(prompt.count, 500,
+                             "System prompt should be substantive (500+ chars)")
     }
 
     // MARK: - Helper for testing (must be accessible)
