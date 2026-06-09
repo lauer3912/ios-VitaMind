@@ -85,9 +85,10 @@ struct CoachView: View {
             do {
                 let response = try await AIService.shared.sendMessage(currentMessage, history: Array(history))
                 let aiMsg = CoachMessage(
-                    text: response,
+                    text: response.text,
                     isUser: false,
-                    timestamp: Date()
+                    timestamp: Date(),
+                    citations: response.citations
                 )
                 messages.append(aiMsg)
             } catch {
@@ -121,6 +122,11 @@ struct CoachMessage: Identifiable {
     let text: String
     let isUser: Bool
     let timestamp: Date
+    /// Citations extracted from the AI's "### Sources" block (Apple Guideline
+    /// 1.4.1, 2026-06-09 build 10). User messages and the welcome message
+    /// have an empty array. AI messages get the citations rendered as a
+    /// dedicated footer card directly below the message bubble.
+    var citations: [Citation] = []
 }
 
 struct CoachHeaderView: View {
@@ -213,12 +219,19 @@ struct CoachMessageBubble: View {
                         RoundedRectangle(cornerRadius: 18)
                             .fill(message.isUser ? VitaTheme.Colors.primary : VitaTheme.Colors.surface)
                     )
-                
+
+                // Citation footer (Apple Guideline 1.4.1, build 10).
+                // Rendered as a separate card directly below the AI message
+                // so reviewers and users can find sources at a glance.
+                if !message.isUser && !message.citations.isEmpty {
+                    CitationFooterView(citations: message.citations)
+                }
+
                 Text(formatTime(message.timestamp))
                     .font(VitaTheme.Fonts.caption)
                     .foregroundColor(VitaTheme.Colors.textTertiary)
             }
-            
+
             if message.isUser {
                 ZStack {
                     Circle()
@@ -239,6 +252,102 @@ struct CoachMessageBubble: View {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+}
+
+// MARK: - Citation Footer (Apple Guideline 1.4.1, build 10)
+
+/// Renders the "Sources" card that appears directly below each AI response.
+/// Apple specifically called out (2026-06-09 rejection) that citations
+/// "should be easy for the user to find", so this view is intentionally
+/// visually distinct from the prose bubble: it has its own header, an info
+/// icon, a numbered list of tappable links, and a domain whitelist
+/// indication. Non-whitelisted domains (if the model ever deviates) are
+/// visually flagged with a warning.
+struct CitationFooterView: View {
+    let citations: [Citation]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Header
+            HStack(spacing: 6) {
+                Image(systemName: "books.vertical.fill")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(VitaTheme.Colors.primary)
+                Text("Sources")
+                    .font(VitaTheme.Fonts.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(VitaTheme.Colors.textPrimary)
+                Text("(\(citations.count))")
+                    .font(VitaTheme.Fonts.caption)
+                    .foregroundColor(VitaTheme.Colors.textSecondary)
+                Spacer()
+            }
+
+            // Numbered citation list
+            ForEach(Array(citations.enumerated()), id: \.offset) { index, citation in
+                CitationRow(index: index + 1, citation: citation)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(VitaTheme.Colors.surface.opacity(0.7))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(VitaTheme.Colors.primary.opacity(0.4), lineWidth: 1)
+        )
+        .frame(maxWidth: 280, alignment: .leading)
+        .accessibilityIdentifier("coach_citation_footer")
+    }
+}
+
+/// Single row inside the citation footer. Shows [N], the title as a tappable
+/// link, the host, and a warning icon if the host isn't on the Apple
+/// 1.4.1 whitelist.
+private struct CitationRow: View {
+    let index: Int
+    let citation: Citation
+
+    private var isWhitelisted: Bool {
+        HealthSourceCatalog.isAllowed(citation.url)
+    }
+
+    private var host: String {
+        URL(string: citation.url)?.host ?? citation.url
+    }
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Text("[\(index)]")
+                .font(VitaTheme.Fonts.caption)
+                .fontWeight(.bold)
+                .foregroundColor(VitaTheme.Colors.primary)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Link(destination: URL(string: citation.url) ?? URL(string: "https://example.com")!) {
+                    Text(citation.title.isEmpty ? HealthSourceCatalog.defaultTitle(for: citation.url) : citation.title)
+                        .font(VitaTheme.Fonts.caption)
+                        .foregroundColor(VitaTheme.Colors.primary)
+                        .underline()
+                        .lineLimit(2)
+                }
+                Text(host)
+                    .font(.system(size: 10))
+                    .foregroundColor(VitaTheme.Colors.textSecondary)
+                    .lineLimit(1)
+            }
+
+            if !isWhitelisted {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 10))
+                    .foregroundColor(VitaTheme.Colors.accent)
+                    .accessibilityLabel("Non-whitelisted source")
+            }
+        }
+        .accessibilityIdentifier("coach_citation_row_\(index)")
     }
 }
 

@@ -107,6 +107,79 @@ enum AIProviderType: String, CaseIterable, Codable, Identifiable {
     }
 }
 
+// MARK: - Citation (Apple Guideline 1.4.1 compliance, 2026-06-09 build 10)
+
+/// A single source citation extracted from an AI response's "### Sources" block.
+/// Apple requires health/medical information to be cited; users must be able to
+/// find citations easily (rendered as a dedicated footer card, not buried in prose).
+struct Citation: Codable, Identifiable, Hashable {
+    let id: Int
+    let title: String
+    let url: String
+}
+
+/// Result of an AI call: the display text (with the "### Sources" block already
+/// stripped out) plus the citations parsed from that block. Returning them
+/// together keeps the UI in sync with what the model actually produced.
+struct AIResponse {
+    let text: String
+    let citations: [Citation]
+
+    init(text: String, citations: [Citation] = []) {
+        self.text = text
+        self.citations = citations
+    }
+}
+
+/// Authoritative source whitelist (Apple 1.4.1). The AI prompt instructs the
+/// model to cite only URLs whose domain is in this set. The parser also
+/// uses this list to flag suspicious citations and to derive a display title
+/// when the AI omitted one.
+enum HealthSourceCatalog {
+    /// Allowed source domains (Apple 1.4.1 — authoritative health sources only)
+    static let allowedDomains: [String] = [
+        "cdc.gov",            // Centers for Disease Control and Prevention
+        "who.int",            // World Health Organization
+        "nih.gov",            // National Institutes of Health
+        "medlineplus.gov",    // NIH consumer health information
+        "mayoclinic.org",     // Mayo Clinic
+        "nhs.uk",             // UK National Health Service
+        "pubmed.ncbi.nlm.nih.gov", // NIH peer-reviewed studies
+        "healthline.com",     // Medically reviewed consumer health
+        "webmd.com"           // Medically reviewed consumer health
+    ]
+
+    /// Default fallback titles when an AI response references a domain
+    /// without specifying a page title. Keeps the Sources card useful even
+    /// when the model is terse.
+    static func defaultTitle(for url: String) -> String {
+        let lower = url.lowercased()
+        if lower.contains("cdc.gov") { return "CDC (Centers for Disease Control and Prevention)" }
+        if lower.contains("who.int") { return "WHO (World Health Organization)" }
+        if lower.contains("nih.gov") && !lower.contains("pubmed") {
+            return "NIH (National Institutes of Health)"
+        }
+        if lower.contains("medlineplus.gov") { return "MedlinePlus (NIH)" }
+        if lower.contains("mayoclinic.org") { return "Mayo Clinic" }
+        if lower.contains("nhs.uk") { return "NHS (UK National Health Service)" }
+        if lower.contains("pubmed.ncbi.nlm.nih.gov") { return "PubMed (Peer-reviewed study)" }
+        if lower.contains("healthline.com") { return "Healthline (Medically Reviewed)" }
+        if lower.contains("webmd.com") { return "WebMD (Medically Reviewed)" }
+        return url
+    }
+
+    /// Returns true if the URL's host is on the allowed-domain whitelist.
+    /// Used by tests; the UI also surfaces a warning icon for non-whitelisted
+    /// citations so reviewers can audit source quality.
+    static func isAllowed(_ urlString: String) -> Bool {
+        guard let url = URL(string: urlString), let host = url.host?.lowercased() else {
+            return false
+        }
+        let normalizedHost = host.hasPrefix("www.") ? String(host.dropFirst(4)) : host
+        return allowedDomains.contains { normalizedHost == $0 || normalizedHost.hasSuffix(".\($0)") }
+    }
+}
+
 // MARK: - Chat Message
 
 struct ChatMessage: Codable, Identifiable {
@@ -192,62 +265,226 @@ final class AIService: ObservableObject {
         saveConfiguration()
     }
 
-    // MARK: - System Prompt (Apple Guideline 1.4.1 compliance, 2026-06-08)
+    // MARK: - System Prompt (Apple Guideline 1.4.1 compliance, 2026-06-09 build 10)
 
     /// System prompt injected on every AI call. Mandates:
-    /// 1. End health responses with markdown citation links to authoritative sources
-    /// 2. No medical claims (no diagnosis/treatment/cure)
-    /// 3. Recommend consulting healthcare professionals
+    /// 1. End health responses with a structured "### Sources" block listing
+    ///    authoritative URLs (Apple's specific 2026-06-09 rejection ask:
+    ///    "include citations...easy for the user to find").
+    /// 2. No medical claims (no diagnosis/treatment/cure).
+    /// 3. Recommend consulting healthcare professionals.
     /// 4. Emergency response for chest pain/breathing difficulty/etc.
-    /// 5. Friendly tone, plain language
+    /// 5. Friendly tone, plain language.
+    ///
     /// Required by Apple App Review Guideline 1.4.1 (Safety - Physical Harm).
+    /// Build 9 (2026-06-08) was rejected because the AI sometimes omitted the
+    /// Sources block and the UI rendered any present citations as buried
+    /// markdown. Build 10 fixes both: rule #1 is now position-anchored at the
+    /// top, uses a rigid parseable format, names an explicit domain whitelist,
+    /// and the response is parsed + rendered as a dedicated footer card.
     static let vitaCoachSystemPrompt = """
     You are VitaCoach, VitaMindGo's friendly health and wellness AI assistant.
 
-    MANDATORY RULES:
+    ★ CRITICAL RULE #1 — CITATIONS (REQUIRED, NO EXCEPTIONS) ★
 
-    1. CITATIONS: Always end health-related responses with "Sources:" followed by markdown links to authoritative sources. Use: [NIH](https://www.nih.gov), [MedlinePlus](https://medlineplus.gov), [Mayo Clinic](https://www.mayoclinic.org), [CDC](https://www.cdc.gov), [PubMed](https://pubmed.ncbi.nlm.nih.gov). Example ending: "Sources: [NIH](https://www.nih.gov) [Mayo Clinic](https://www.mayoclinic.org)"
+    EVERY response that mentions a health condition, treatment, exercise, diet, sleep, vital sign, medication, mental health, or any wellness topic MUST end with a "### Sources" block. Skipping it is a rejection-level failure.
 
-    2. NO MEDICAL CLAIMS: You provide general wellness information only. You are NOT a doctor and cannot diagnose, treat, or cure any condition. Do not claim any health intervention is "guaranteed" or "proven" without a citation.
+    Required format (use this EXACT structure, including the "### Sources" header and the em-dash separator):
+
+    <your answer text here>
+
+    ### Sources
+    1. <Page Title> — <full URL>
+    2. <Page Title> — <full URL>
+
+    • Cite ONLY URLs whose domain is in this whitelist:
+      cdc.gov · who.int · nih.gov · medlineplus.gov · mayoclinic.org · nhs.uk · pubmed.ncbi.nlm.nih.gov · healthline.com · webmd.com
+    • Each line MUST include both a real page title (e.g. "CDC - Diabetes Management") and the full https:// URL.
+    • Provide at least 2 citations for any health/medical response. Use 3+ for serious topics.
+    • Do NOT invent URLs. If you are unsure of the exact page, cite the domain root (https://www.cdc.gov) with title "CDC".
+
+    OTHER RULES:
+
+    2. NO MEDICAL CLAIMS: You provide general wellness information only. You are NOT a doctor and cannot diagnose, treat, or cure any condition. Never claim an intervention is "guaranteed" or "proven" without a citation.
 
     3. RECOMMEND PROFESSIONAL ADVICE: For any specific medical question, symptom, condition, or treatment decision, recommend consulting a qualified healthcare professional.
 
-    4. EMERGENCY: If the user describes emergency symptoms (chest pain, difficulty breathing, severe bleeding, thoughts of self-harm), respond: "This may be a medical emergency. Please call 911 or your local emergency number, or go to the nearest emergency room immediately."
+    4. EMERGENCY: If the user describes emergency symptoms (chest pain, difficulty breathing, severe bleeding, thoughts of self-harm), respond: "This may be a medical emergency. Please call 911 or your local emergency number, or go to the nearest emergency room immediately." (A Sources block is still required after the emergency message.)
 
     5. TONE: Friendly, encouraging, honest about uncertainty. Use plain language and avoid medical jargon. Never recommend dangerous behavior.
 
     VitaMindGo provides general wellness information, not medical advice.
     """
 
+    // MARK: - Citation Parser (Apple Guideline 1.4.1 compliance, 2026-06-09)
+
+    /// Extracts the "### Sources" block from an AI response and returns the
+    /// cleaned display text together with structured `Citation` objects.
+    ///
+    /// Accepted formats (parsed in order of preference):
+    ///   1. `### Sources\n1. Title — https://...\n2. Title — https://...`
+    ///   2. `**Sources:**\n1. Title — https://...` (markdown bold variant)
+    ///   3. `Sources:\n1. Title — https://...` (legacy prompt format)
+    ///   4. Inline markdown links `[Title](url)` at the end of the response
+    ///      (used as a last-resort fallback so we still surface something
+    ///      even if the model deviated from the format).
+    ///
+    /// Each parsed line must look like: `<number>. <title> — <url>` or
+    /// `<number>. <title> (<url>)`. Lines that don't contain a valid http(s)
+    /// URL are skipped silently. The "### Sources" block (and any trailing
+    /// blank lines) is removed from the display text.
+    static func parseCitations(from raw: String) -> (cleanText: String, citations: [Citation]) {
+        guard !raw.isEmpty else { return (raw, []) }
+
+        let lines = raw.components(separatedBy: .newlines)
+
+        // 1) Locate the header line.
+        let headerIndices = lines.indices.filter { idx in
+            let trimmed = lines[idx].trimmingCharacters(in: .whitespaces)
+            let lower = trimmed.lowercased()
+            return lower == "### sources"
+                || lower == "**sources:**"
+                || lower == "**sources**"
+                || lower == "sources:"
+                || lower == "sources"
+        }
+
+        guard let headerIdx = headerIndices.last else {
+            // No Sources block — try the inline-link fallback before giving up.
+            return parseInlineMarkdownLinks(from: raw)
+        }
+
+        // 2) Collect citation lines after the header until the first blank
+        //    line or end-of-input. A "citation line" starts with a digit + "."
+        //    or a hyphen.
+        var citations: [Citation] = []
+        var collectedLineCount = 0
+        for i in (headerIdx + 1)..<lines.count {
+            let line = lines[i].trimmingCharacters(in: .whitespaces)
+            if line.isEmpty { break } // End of Sources block
+
+            if let citation = parseCitationLine(line) {
+                citations.append(citation)
+                collectedLineCount += 1
+            } else {
+                // Unparseable line — stop the block rather than swallowing
+                // the next paragraph of the response.
+                break
+            }
+        }
+
+        // 3) Strip the Sources block from the display text.
+        let displayEnd = headerIdx
+        let displayLines = Array(lines[0..<displayEnd])
+        let cleanText = displayLines.joined(separator: "\n")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // 4) If we found nothing usable, fall back to inline-link scraping.
+        if citations.isEmpty {
+            return parseInlineMarkdownLinks(from: raw)
+        }
+
+        return (cleanText, citations)
+    }
+
+    /// Parses a single line of the Sources block.
+    /// Accepts:
+    ///   "1. CDC - Diabetes Management — https://www.cdc.gov/diabetes"
+    ///   "2. Mayo Clinic Type 2 Diabetes (https://www.mayoclinic.org/...)"
+    ///   "3) Title — https://..."
+    ///   "- Title — https://..."
+    private static func parseCitationLine(_ line: String) -> Citation? {
+        // 1) Strip leading list marker: "1.", "2)", "- "
+        var content = line
+        let leadingMarker: [String] = ["1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.", "1)", "2)", "3)", "4)", "5)", "6)", "7)", "8)", "9)"]
+        for marker in leadingMarker {
+            if content.hasPrefix(marker) {
+                content = String(content.dropFirst(marker.count)).trimmingCharacters(in: .whitespaces)
+                break
+            }
+        }
+        if content.hasPrefix("- ") { content = String(content.dropFirst(2)) }
+        if content.hasPrefix("* ") { content = String(content.dropFirst(2)) }
+
+        // 2) Extract the first http(s) URL.
+        guard let urlRange = content.range(of: #"https?://\S+"#, options: .regularExpression) else {
+            return nil
+        }
+        var url = String(content[urlRange])
+        // Trim trailing punctuation that is part of English sentences, not URLs.
+        while let last = url.last, ".,;:!?".contains(last) {
+            url.removeLast()
+        }
+        let title = String(content[..<urlRange.lowerBound])
+            .trimmingCharacters(in: .whitespaces)
+            .trimmingCharacters(in: CharacterSet(charactersIn: "—-–-"))
+            .trimmingCharacters(in: .whitespaces)
+        guard !title.isEmpty, !url.isEmpty else { return nil }
+
+        return Citation(id: 0, title: title, url: url)
+    }
+
+    /// Last-resort fallback: scrapes inline `[Title](https://url)` markdown
+    /// links from the response. Used when the model skipped the Sources
+    /// block entirely. Capped at the first 5 links to keep the footer
+    /// manageable.
+    private static func parseInlineMarkdownLinks(from text: String) -> (cleanText: String, citations: [Citation]) {
+        let pattern = #"\[([^\]]+)\]\((https?://[^)]+)\)"#
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            return (text, [])
+        }
+        let nsText = text as NSString
+        let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsText.length))
+            .prefix(5) // Cap at 5 fallback citations
+
+        let citations = matches.enumerated().compactMap { (i, m) -> Citation? in
+            let title = nsText.substring(with: m.range(at: 1))
+            let url = nsText.substring(with: m.range(at: 2))
+            return Citation(id: i, title: title, url: url)
+        }
+
+        // Display text is left as-is in fallback mode; we don't try to
+        // surgically remove inline links (risk of corrupting sentences).
+        return (text, citations)
+    }
+
     // MARK: - API Call
 
-    func sendMessage(_ text: String, history: [ChatMessage] = []) async throws -> String {
+    /// Sends a message and returns the AI's reply together with any
+    /// citations that were parsed out of the response. Throws
+    /// `AIError.missingAPIKey` etc. on transport failures.
+    func sendMessage(_ text: String, history: [ChatMessage] = []) async throws -> AIResponse {
         guard !apiKey.isEmpty else {
             throw AIError.missingAPIKey
         }
 
+        let raw: String
         switch currentProvider {
         case .minimaxCn, .minimaxGlobal:
-            return try await sendMiniMaxMessage(text, history: history)
+            raw = try await sendMiniMaxMessage(text, history: history)
         case .openai:
-            return try await sendOpenAIMessage(text, history: history)
+            raw = try await sendOpenAIMessage(text, history: history)
         case .anthropic:
-            return try await sendAnthropicMessage(text, history: history)
+            raw = try await sendAnthropicMessage(text, history: history)
         case .google:
-            return try await sendGoogleMessage(text, history: history)
+            raw = try await sendGoogleMessage(text, history: history)
         case .deepseek:
-            return try await sendDeepSeekMessage(text, history: history)
+            raw = try await sendDeepSeekMessage(text, history: history)
         case .xai:
-            return try await sendXAIMessage(text, history: history)
+            raw = try await sendXAIMessage(text, history: history)
         case .moonshot:
-            return try await sendOpenAICompatibleMessage(text, history: history)
+            raw = try await sendOpenAICompatibleMessage(text, history: history)
         case .qwen:
-            return try await sendOpenAICompatibleMessage(text, history: history)
+            raw = try await sendOpenAICompatibleMessage(text, history: history)
         case .zai:
-            return try await sendOpenAICompatibleMessage(text, history: history)
+            raw = try await sendOpenAICompatibleMessage(text, history: history)
         case .stepfun:
-            return try await sendOpenAICompatibleMessage(text, history: history)
+            raw = try await sendOpenAICompatibleMessage(text, history: history)
         }
+
+        // Parse citations out of the response (Apple Guideline 1.4.1).
+        let parsed = Self.parseCitations(from: raw)
+        return AIResponse(text: parsed.cleanText, citations: parsed.citations)
     }
 
     // MARK: - Provider-specific implementations

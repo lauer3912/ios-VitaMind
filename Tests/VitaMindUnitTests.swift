@@ -195,17 +195,22 @@ final class VitaPocketUnitTests: XCTestCase {
         XCTAssertTrue(prompt.contains("CITATIONS"),
                       "System prompt must include a 'CITATIONS' rule")
 
-        // 2. Required format 'Sources:' mentioned
-        XCTAssertTrue(prompt.contains("Sources:"),
-                      "System prompt must require 'Sources:' format for citations")
+        // 2. Required structured header '### Sources' (build 10 — Apple
+        //    specifically asked for citations to be "easy to find")
+        XCTAssertTrue(prompt.contains("### Sources"),
+                      "System prompt must require the '### Sources' structured header")
 
-        // 3. Authoritative source list (NIH, MedlinePlus, Mayo Clinic, CDC, PubMed)
-        for source in ["NIH", "MedlinePlus", "Mayo Clinic", "CDC", "PubMed"] {
-            XCTAssertTrue(prompt.contains(source),
-                          "System prompt must include '\(source)' as a citation source")
+        // 3. Domain-based authoritative source whitelist (build 10).
+        //    The legacy form of this test (build 9) checked for label
+        //    names like "NIH"/"Mayo Clinic". Build 10's prompt lists the
+        //    source domains instead, which is what the AI uses to choose
+        //    URLs to cite.
+        for domain in ["cdc.gov", "who.int", "nih.gov", "medlineplus.gov", "mayoclinic.org"] {
+            XCTAssertTrue(prompt.contains(domain),
+                          "System prompt must include '\(domain)' as an authoritative source domain")
         }
 
-        // 4. No medical claims rule
+        // 4. No medical claims rule (carried over from build 9)
         XCTAssertTrue(prompt.contains("NOT a doctor"),
                       "System prompt must disclaim medical role with 'NOT a doctor'")
     }
@@ -228,12 +233,124 @@ final class VitaPocketUnitTests: XCTestCase {
 
     func testAISystemPromptLengthIsReasonable() throws {
         // Guards against accidental prompt bloat (would increase per-request token cost)
+        // Build 10's prompt is longer because it spells out the structured
+        // citation format and the domain whitelist, so the ceiling is bumped
+        // from 2000 → 3000 to accommodate the stricter Apple 1.4.1 requirements.
         let prompt = AIService.vitaCoachSystemPrompt
-        XCTAssertLessThan(prompt.count, 2000,
-                          "System prompt should stay under 2000 chars to control token cost")
+        XCTAssertLessThan(prompt.count, 3000,
+                          "System prompt should stay under 3000 chars to control token cost")
         XCTAssertGreaterThan(prompt.count, 500,
                              "System prompt should be substantive (500+ chars)")
     }
+
+    // MARK: - Apple Guideline 1.4.1 Regression Tests — Citations (build 10, 2026-06-09)
+    // Apple rejected build 9 because (a) the AI sometimes omitted the Sources
+    // block and (b) the UI rendered any present citations as buried markdown.
+    // Build 10 fixes both with a stricter prompt, a parser, and a dedicated
+    // citation footer card. These tests guard against future regression.
+
+    func testCitationParserExtractsSourcesBlock() throws {
+        let raw = """
+        Managing diabetes involves several lifestyle factors.
+
+        ### Sources
+        1. CDC - Diabetes Management — https://www.cdc.gov/diabetes/managing/index.html
+        2. Mayo Clinic - Type 2 Diabetes — https://www.mayoclinic.org/diseases-conditions/type-2-diabetes
+        """
+        let (clean, citations) = AIService.parseCitations(from: raw)
+
+        XCTAssertEqual(citations.count, 2, "Should extract 2 citations")
+        XCTAssertEqual(citations[0].title, "CDC - Diabetes Management")
+        XCTAssertEqual(citations[0].url, "https://www.cdc.gov/diabetes/managing/index.html")
+        XCTAssertEqual(citations[1].title, "Mayo Clinic - Type 2 Diabetes")
+        XCTAssertTrue(clean.contains("Managing diabetes"), "Display text keeps the prose")
+        XCTAssertFalse(clean.contains("### Sources"), "Display text strips the Sources header")
+        XCTAssertFalse(clean.contains("cdc.gov"), "Display text strips the citation lines")
+    }
+
+    func testCitationParserHandlesLegacyBoldHeader() throws {
+        // Older prompt variant used **Sources:** — make sure we still parse it.
+        let raw = "**Sources:**\n1. NIH — https://www.nih.gov\n2. WHO — https://www.who.int"
+        let (_, citations) = AIService.parseCitations(from: raw)
+        XCTAssertEqual(citations.count, 2)
+        XCTAssertEqual(citations[0].url, "https://www.nih.gov")
+    }
+
+    func testCitationParserHandlesPlainHeader() throws {
+        // "Sources:" with no markdown decoration.
+        let raw = "Some text.\n\nSources:\n1. CDC — https://www.cdc.gov"
+        let (_, citations) = AIService.parseCitations(from: raw)
+        XCTAssertEqual(citations.count, 1)
+    }
+
+    func testCitationParserFallsBackToInlineLinks() throws {
+        // No Sources block but inline [Title](url) markdown is present.
+        let raw = "Try [MedlinePlus](https://medlineplus.gov) for more info."
+        let (_, citations) = AIService.parseCitations(from: raw)
+        XCTAssertEqual(citations.count, 1)
+        XCTAssertEqual(citations[0].title, "MedlinePlus")
+        XCTAssertEqual(citations[0].url, "https://medlineplus.gov")
+    }
+
+    func testCitationParserReturnsEmptyForNoCitations() throws {
+        let raw = "This is just plain text with no sources."
+        let (clean, citations) = AIService.parseCitations(from: raw)
+        XCTAssertEqual(citations.count, 0)
+        XCTAssertEqual(clean, raw)
+    }
+
+    func testCitationParserStopsAtUnparseableLine() throws {
+        // A line without a URL should end the Sources block, not be swallowed.
+        let raw = """
+        Prose.
+
+        ### Sources
+        1. CDC — https://www.cdc.gov
+        This line has no URL or number prefix.
+        2. WHO — https://www.who.int
+        """
+        let (_, citations) = AIService.parseCitations(from: raw)
+        XCTAssertEqual(citations.count, 1, "Parser must stop at the broken line")
+        XCTAssertEqual(citations[0].url, "https://www.cdc.gov")
+    }
+
+    func testCitationParserStripsTrailingPunctuationFromURL() throws {
+        // Model sometimes ends lines with a period or comma.
+        let raw = "### Sources\n1. CDC — https://www.cdc.gov."
+        let (_, citations) = AIService.parseCitations(from: raw)
+        XCTAssertEqual(citations[0].url, "https://www.cdc.gov")
+    }
+
+    func testHealthSourceCatalogWhitelistAcceptsTrustedDomains() throws {
+        XCTAssertTrue(HealthSourceCatalog.isAllowed("https://www.cdc.gov/diabetes"))
+        XCTAssertTrue(HealthSourceCatalog.isAllowed("https://www.who.int/news"))
+        XCTAssertTrue(HealthSourceCatalog.isAllowed("https://medlineplus.gov/diabetes"))
+        XCTAssertTrue(HealthSourceCatalog.isAllowed("https://www.mayoclinic.org/diseases-conditions/type-2-diabetes"))
+        XCTAssertTrue(HealthSourceCatalog.isAllowed("https://www.nhs.uk/conditions/type-2-diabetes/"))
+        XCTAssertTrue(HealthSourceCatalog.isAllowed("https://pubmed.ncbi.nlm.nih.gov/12345678"))
+    }
+
+    func testHealthSourceCatalogWhitelistRejectsUntrustedDomains() throws {
+        XCTAssertFalse(HealthSourceCatalog.isAllowed("https://www.reddit.com/r/diabetes"))
+        XCTAssertFalse(HealthSourceCatalog.isAllowed("https://en.wikipedia.org/wiki/Diabetes"))
+        XCTAssertFalse(HealthSourceCatalog.isAllowed("https://www.tiktok.com/@dr.health"))
+        XCTAssertFalse(HealthSourceCatalog.isAllowed("not a url"))
+    }
+
+    func testSystemPromptRequiresStructuredSourcesHeader() throws {
+        // Build 10 must require the "### Sources" header specifically
+        // (Apple wants citations "easy to find" — the parser relies on this header).
+        let prompt = AIService.vitaCoachSystemPrompt
+        XCTAssertTrue(prompt.contains("### Sources"),
+                      "System prompt must instruct AI to use '### Sources' header for parseable citations")
+        XCTAssertTrue(prompt.contains("whitelist"),
+                      "System prompt must mention the source whitelist")
+        XCTAssertTrue(prompt.contains("cdc.gov") && prompt.contains("mayoclinic.org"),
+                      "System prompt must list the major authoritative sources by domain")
+        XCTAssertTrue(prompt.contains("at least 2"),
+                      "System prompt must require a minimum number of citations")
+    }
+
 
     // MARK: - Helper for testing (must be accessible)
     private func extractValue(from data: Data, keyPath: String) -> String? {

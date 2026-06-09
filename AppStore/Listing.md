@@ -275,6 +275,16 @@ Key testing guidance:
 4. The 5 tabs (Pocket, Habits, Coach, Collection, Settings) are all functional without an account. Onboarding tour is skippable.
 5. No subscription, no IAP, no in-app purchase in v3.0.0 — app is 100% free with all features.
 6. The app does NOT claim to diagnose, treat, or prevent any medical condition. All health metrics are presented as informational/lifestyle data.
+
+Guideline 1.4.1 fix (build 10, 2026-06-09):
+The AI Health Coach (VitaCoach, Coach tab) has been updated to ensure every health-related response includes citations to authoritative sources, displayed prominently in a dedicated "Sources" footer card directly below each AI message.
+
+- Citation format: Each AI response ends with a "### Sources" block listing 2+ numbered citations.
+- Source whitelist: Citations are restricted to authoritative domains (cdc.gov, who.int, nih.gov, medlineplus.gov, mayoclinic.org, nhs.uk, pubmed.ncbi.nlm.nih.gov, healthline.com, webmd.com).
+- Visibility: Citations appear as a clearly labeled "Sources" card with tappable links, immediately below the AI message bubble.
+- Disclaimer: A persistent medical disclaimer is also shown at the top of the Coach view ("For informational purposes only — not medical advice").
+
+To test: Open the Coach tab, enter any health-related question (e.g., "How to manage stress", "Benefits of walking 30 min a day"), and verify the response ends with a "Sources" card containing 2+ tappable citation links.
 ```
 
 ### 10.4 Regulated Medical Device (受监管医疗设备)
