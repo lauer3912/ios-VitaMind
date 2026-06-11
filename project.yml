@@ -30,6 +30,12 @@ targets:
         excludes:
           - "**/.DS_Store"
           - "**/DesignSpec/**"
+      # Resources/ holds non-bundled support files (e.g. StoreKit config)
+      # buildPhase: none means it won't be copied into the app bundle.
+      - path: Resources
+        type: group
+        buildPhase: none
+        optional: true
     resources:
       - path: Sources/Resources/Assets.xcassets
       - path: Sources/LaunchScreen.storyboard
@@ -60,6 +66,8 @@ targets:
         buildPhase:
           copyFiles:
             destination: plugins
+      # StoreKit 2 (v3.1.0 IAP — auto-linked, kept weak for future flexibility)
+      - sdk: StoreKit.framework
 
   VitaPocketWidget:
     type: app-extension

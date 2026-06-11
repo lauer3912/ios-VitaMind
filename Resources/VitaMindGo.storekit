@@ -1,0 +1,77 @@
+{
+  "identifier" : "VitaMindGoStoreKit",
+  "nonRenewingSubscriptions" : [],
+  "products" : [],
+  "settings" : {
+    "_compatibilityTimeRate" : 1,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21525862182",
+      "localizations" : [
+        {
+          "description" : "VitaMindGo Pro",
+          "displayName" : "VitaMindGo Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "VitaMindGo Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "B7A6C2A1",
+          "introductoryOffer" : {
+            "displayPrice" : "0.00",
+            "internalID" : "trial_7d",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Unlock unlimited AI Coach, advanced insights, and exclusive card themes.",
+              "displayName" : "VitaMindGo Pro Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "vitamind_pro_monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "VitaMindGo Pro Monthly",
+          "subscriptionGroupID" : "21525862182",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "39.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "C8D2B3A5",
+          "localizations" : [
+            {
+              "description" : "Unlock unlimited AI Coach, advanced insights, and exclusive card themes. Save 33% vs monthly.",
+              "displayName" : "VitaMindGo Pro Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "vitamind_pro_yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "VitaMindGo Pro Yearly",
+          "subscriptionGroupID" : "21525862182",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
